@@ -22,6 +22,6 @@ import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
 class DeviceRepositoryImpl : DeviceRepository {
 
   override suspend fun DomainModule.isDeviceOnline(): Boolean = with(fix()) {
-    deviceRepository.run { isDeviceOnline() }
+    deviceDataSource.run { isDeviceOnline() }
   }
 }

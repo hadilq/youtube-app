@@ -1,4 +1,4 @@
-package com.github.hadilq.youtubeapp.domain.navigation
+package com.github.hadilq.youtubeapp.core.navigation
 
 interface Navigator {
 

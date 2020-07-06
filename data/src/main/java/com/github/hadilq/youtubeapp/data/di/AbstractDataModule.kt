@@ -15,6 +15,8 @@
  */
 package com.github.hadilq.youtubeapp.data.di
 
+import android.content.Context
+import android.net.ConnectivityManager
 import androidx.room.Room
 import com.github.hadilq.youtubeapp.data.database.AppDatabase
 import com.github.hadilq.youtubeapp.data.database.dao.PlaylistDao
@@ -50,6 +52,10 @@ abstract class AbstractDataModule : DataModule {
   override val googleDataSource: GoogleDataSource by lazy { GoogleDataSourceImpl() }
 
   override val deviceDataSource: DeviceDataSource by lazy { DeviceDataSourceImpl() }
+
+  override val connectivityManager: ConnectivityManager by lazy {
+    applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+  }
 
   override val googleAccountCredential: GoogleAccountCredential by lazy {
     GoogleAccountCredential.usingOAuth2(applicationContext, arrayListOf(YouTubeScopes.YOUTUBE_READONLY))

@@ -17,6 +17,7 @@ package com.github.hadilq.youtubeapp.data.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
 import com.github.hadilq.youtubeapp.data.database.AppDatabase
 import com.github.hadilq.youtubeapp.data.database.dao.PlaylistDao
 import com.github.hadilq.youtubeapp.data.database.dao.PlaylistItemDao
@@ -44,6 +45,8 @@ interface DataModule : DataModuleSyntax {
   val applicationContext: Context
 
   val sharedPreferences: SharedPreferences
+
+  val connectivityManager: ConnectivityManager
 
   val preferencesDataSource: PreferencesDataSource
 

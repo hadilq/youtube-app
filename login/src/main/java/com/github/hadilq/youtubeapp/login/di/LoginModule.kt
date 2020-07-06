@@ -15,12 +15,13 @@
  */
 package com.github.hadilq.youtubeapp.login.di
 
+import com.github.hadilq.youtubeapp.core.di.CoreModule
 import com.github.hadilq.youtubeapp.domain.di.DomainModule
 import com.github.hadilq.youtubeapp.domain.di.LoginModuleSyntax
 import com.github.hadilq.youtubeapp.login.LoginViewModelFactory
 import com.github.hadilq.youtubeapp.login.util.ParcelableUtil
 
-interface LoginModule : DomainModule {
+interface LoginModule : DomainModule, CoreModule {
 
   val loginViewModelFactory: LoginViewModelFactory
 

@@ -17,32 +17,32 @@ package com.github.hadilq.youtubeapp.login
 
 import com.github.hadilq.androidlifecyclehandler.LifeFactory
 import com.github.hadilq.androidlifecyclehandler.SLife
+import com.github.hadilq.youtubeapp.core.util.execute
 import com.github.hadilq.youtubeapp.domain.entity.AccountName
 import com.github.hadilq.youtubeapp.domain.entity.Intent
 import com.github.hadilq.youtubeapp.login.di.LoginModule
-import com.github.hadilq.youtubeapp.core.util.exec
 import com.google.android.gms.common.ConnectionResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
-import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class LoginViewModel : SLife() {
 
   private val playlistPublisher = Channel<Unit>(CONFLATED)
   private val showGooglePlayServicesAvailabilityErrorDialogPublisher = Channel<Int>(CONFLATED)
-  private val chooseAccountPublisher = Channel<Unit>(CONFLATED)
+  private val chooseAccountPublisher = Channel<Pair<Intent, AccountName?>>(CONFLATED)
   private val noNetworkPublisher = Channel<Unit>(CONFLATED)
 
-  val navToPlaylist = playlistPublisher.consumeAsFlow()
+  val navToPlaylist = playlistPublisher.receiveAsFlow()
   val showGooglePlayServicesAvailabilityErrorDialog =
-    showGooglePlayServicesAvailabilityErrorDialogPublisher.consumeAsFlow()
-  val chooseAccount = chooseAccountPublisher.consumeAsFlow()
-  val noNetwork = noNetworkPublisher.consumeAsFlow()
+    showGooglePlayServicesAvailabilityErrorDialogPublisher.receiveAsFlow()
+  val chooseAccount = chooseAccountPublisher.receiveAsFlow()
+  val noNetwork = noNetworkPublisher.receiveAsFlow()
 
-  fun LoginModule.loginPlease() = exec {
+  fun LoginModule.loginPlease() = execute {
     if (!isGooglePlayServicesAvailable()) {
       acquireGooglePlayServices()
     } else if (getSelectedAccountName.run { execute() } == null) {
@@ -54,8 +54,10 @@ class LoginViewModel : SLife() {
     }
   }.sync()
 
-  private suspend fun chooseAccount() {
-    chooseAccountPublisher.send(Unit)
+  private suspend fun LoginModule.chooseAccount() {
+    chooseAccountPublisher.send(
+      newChooseAccountIntent.run { execute() } to getSelectedAccountName.run { execute() }
+    )
   }
 
   private suspend fun LoginModule.isGooglePlayServicesAvailable(): Boolean {
@@ -69,25 +71,9 @@ class LoginViewModel : SLife() {
     }
   }
 
-  fun LoginModule.newChooseAccountIntent(): Intent? {
-    var intent: Intent? = null
-    exec {
-      intent = newChooseAccountIntent.run { execute() }
-    }.sync()
-    return intent
-  }
-
-  fun LoginModule.setSelectedAccountName(accountName: AccountName) = exec {
+  fun LoginModule.setSelectedAccountName(accountName: AccountName) = execute {
     setSelectedAccountName.run { execute(accountName) }
   }.sync()
-
-  fun LoginModule.getSelectedAccountName(): AccountName? {
-    var accountName: AccountName? = null
-    exec {
-      accountName = getSelectedAccountName.run { execute() }
-    }.sync()
-    return accountName
-  }
 }
 
 class LoginViewModelFactory : LifeFactory<LoginViewModel> {

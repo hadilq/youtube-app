@@ -30,7 +30,7 @@ val versionJunit: String by project
 val versionAndroidxTestExt: String by project
 val versionAndroidxTestEspresso: String by project
 val versionCoroutines: String by project
-val versionNavigation:String by project
+val versionNavigation: String by project
 
 android {
   compileSdkVersion(versionCompileSdk.toInt())
@@ -56,6 +56,7 @@ dependencies {
 
   implementation(project(":domain"))
   implementation(project(":data"))
+  implementation(project(":core"))
   implementation(project(":login"))
   implementation(project(":playlists"))
 

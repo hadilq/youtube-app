@@ -20,5 +20,5 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.coroutines.EmptyCoroutineContext
 
-fun exec(block: suspend CoroutineScope.() -> Unit) =
+fun execute(block: suspend CoroutineScope.() -> Unit) =
   Entry { CoroutineScope(EmptyCoroutineContext).launch(block = block) }

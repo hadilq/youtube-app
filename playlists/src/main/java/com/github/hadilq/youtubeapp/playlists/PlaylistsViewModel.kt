@@ -18,22 +18,22 @@ package com.github.hadilq.youtubeapp.playlists
 import androidx.paging.PagingData
 import com.github.hadilq.androidlifecyclehandler.LifeFactory
 import com.github.hadilq.androidlifecyclehandler.SLife
-import com.github.hadilq.youtubeapp.core.util.exec
+import com.github.hadilq.youtubeapp.core.util.execute
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
 import com.github.hadilq.youtubeapp.playlists.di.PlaylistsModule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PlaylistsViewModel : SLife() {
 
   private val playlistsPublisher = Channel<PagingData<Playlist>>(Channel.CONFLATED)
 
-  val playlists = playlistsPublisher.consumeAsFlow()
+  val playlists = playlistsPublisher.receiveAsFlow()
 
-  fun PlaylistsModule.startLoading() = exec {
+  fun PlaylistsModule.startLoading() = execute {
     getPlaylists.run { execute(null) }.collect {
       playlistsPublisher.send(it)
     }

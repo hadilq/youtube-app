@@ -15,9 +15,16 @@
  */
 package com.github.hadilq.youtubeapp.di
 
+import android.content.Context
+import com.github.hadilq.youtubeapp.core.di.CoreModule
+import com.github.hadilq.youtubeapp.core.navigation.Navigator
 import com.github.hadilq.youtubeapp.domain.di.DomainModule
 import com.github.hadilq.youtubeapp.playlists.di.AbstractPlaylistsModule
 
 class PlaylistsModuleImpl(
-  private val domainModule: DomainModule
-) : AbstractPlaylistsModule(), DomainModule by domainModule
+  private val domainModule: DomainModule,
+  private val coreModule: CoreModule
+) : AbstractPlaylistsModule(), DomainModule by domainModule {
+
+  override fun navigator(context: Context): Navigator = coreModule.navigator(context)
+}

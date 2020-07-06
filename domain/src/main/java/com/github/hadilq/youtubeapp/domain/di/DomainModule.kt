@@ -15,7 +15,6 @@
  */
 package com.github.hadilq.youtubeapp.domain.di
 
-import com.github.hadilq.youtubeapp.domain.navigation.Navigator
 import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
 import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
 import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
@@ -29,8 +28,6 @@ import com.github.hadilq.youtubeapp.domain.usecase.NewChooseAccountIntent
 import com.github.hadilq.youtubeapp.domain.usecase.SetSelectedAccountName
 
 interface DomainModule : DataModuleSyntax, LoginModuleSyntax, PlaylistsModuleSyntax {
-
-  val navigator: Navigator
 
   val youtubeRepository: YoutubeRepository
 

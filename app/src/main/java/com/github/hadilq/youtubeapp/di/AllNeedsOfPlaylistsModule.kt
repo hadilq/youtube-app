@@ -17,11 +17,13 @@ package com.github.hadilq.youtubeapp.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.github.hadilq.youtubeapp.core.di.AbstractCoreModule
+import com.github.hadilq.youtubeapp.core.di.CoreModule
 import com.github.hadilq.youtubeapp.data.di.AbstractDataModule
 import com.github.hadilq.youtubeapp.data.di.DataModule
 import com.github.hadilq.youtubeapp.domain.di.AbstractDomainModule
 import com.github.hadilq.youtubeapp.domain.di.DomainModule
-import com.github.hadilq.youtubeapp.domain.navigation.Navigator
+import com.github.hadilq.youtubeapp.core.navigation.Navigator
 import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
 import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
 import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
@@ -39,9 +41,11 @@ import com.github.hadilq.youtubeapp.playlists.di.PlaylistsModule
 class AllNeedsOfPlaylistsModule(
   private val appModule: AppModule,
   private val domainModule: AbstractDomainModule,
+  private val coreModule: AbstractCoreModule,
   private val dataModule: AbstractDataModule,
   private val playlistsModule: AbstractPlaylistsModule
 ) : DomainModule by domainModule,
+  CoreModule by coreModule,
   AppModule by appModule,
   DataModule by dataModule,
   PlaylistsModule by playlistsModule {
@@ -52,8 +56,7 @@ class AllNeedsOfPlaylistsModule(
   override val sharedPreferences: SharedPreferences
     get() = dataModule.sharedPreferences
 
-  override val navigator: Navigator
-    get() = domainModule.navigator
+  override fun navigator(context: Context): Navigator = coreModule.navigator(context)
   override val youtubeRepository: YoutubeRepository
     get() = domainModule.youtubeRepository
   override val googlePlayRepository: GooglePlayRepository

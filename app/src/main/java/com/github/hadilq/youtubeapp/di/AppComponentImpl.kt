@@ -48,22 +48,26 @@ class AppComponentImpl(
   override val loginModule: LoginModuleSyntax
     get() {
       val domainModule = DomainModuleImpl(appModule)
+      val coreModule = CoreModuleImpl()
       return AllNeedsOfLoginModule(
         appModule = appModule,
         domainModule = domainModule,
+        coreModule = coreModule,
         dataModule = DataModuleImpl(appModule),
-        loginModule = LoginModuleImpl(domainModule)
+        loginModule = LoginModuleImpl(domainModule, coreModule)
       )
     }
 
   override val playlistsModule: PlaylistsModuleSyntax
     get() {
       val domainModule = DomainModuleImpl(appModule)
+      val coreModule = CoreModuleImpl()
       return AllNeedsOfPlaylistsModule(
         appModule = appModule,
         domainModule = domainModule,
+        coreModule = coreModule,
         dataModule = DataModuleImpl(appModule),
-        playlistsModule = PlaylistsModuleImpl(domainModule)
+        playlistsModule = PlaylistsModuleImpl(domainModule, coreModule)
       )
     }
 }

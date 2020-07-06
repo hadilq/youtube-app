@@ -23,7 +23,7 @@ import com.github.hadilq.youtubeapp.domain.di.App
 
 class AppImpl : Application(), App {
 
-  override val appComponent = AppComponentImpl(this)
+  override val appComponent by lazy { AppComponentImpl(this) }
 
   override fun attachBaseContext(base: Context) {
     super.attachBaseContext(base)

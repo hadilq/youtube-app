@@ -15,7 +15,6 @@
  */
 package com.github.hadilq.youtubeapp.domain.di
 
-import com.github.hadilq.youtubeapp.domain.navigation.Navigator
 import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
 import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
 import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
@@ -30,8 +29,6 @@ import com.github.hadilq.youtubeapp.domain.usecase.SetSelectedAccountName
 import io.mockk.mockk
 
 class FakeDomainModule : DomainModule {
-
-  override val navigator: Navigator = mockk()
 
   override val youtubeRepository: YoutubeRepository = mockk()
 

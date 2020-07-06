@@ -15,9 +15,7 @@
  */
 package com.github.hadilq.youtubeapp.di
 
-import com.github.hadilq.youtubeapp.NavigatorImpl
 import com.github.hadilq.youtubeapp.domain.di.AbstractDomainModule
-import com.github.hadilq.youtubeapp.domain.navigation.Navigator
 import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
 import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
 import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
@@ -25,9 +23,6 @@ import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
 class DomainModuleImpl(
   private val appModule: AppModule
 ) : AbstractDomainModule() {
-
-  override val navigator: Navigator
-    get() = NavigatorImpl(appModule)
 
   override val youtubeRepository: YoutubeRepository
     get() = appModule.youtubeRepository

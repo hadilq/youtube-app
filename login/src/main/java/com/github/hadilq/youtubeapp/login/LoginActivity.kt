@@ -24,9 +24,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.github.hadilq.androidlifecyclehandler.provideLife
 import com.github.hadilq.coroutinelifecyclehandler.observe
+import com.github.hadilq.youtubeapp.core.navigation.Playlist
 import com.github.hadilq.youtubeapp.domain.di.App
 import com.github.hadilq.youtubeapp.domain.entity.AccountName
-import com.github.hadilq.youtubeapp.domain.navigation.Playlist
 import com.github.hadilq.youtubeapp.login.di.LoginModule
 import com.github.hadilq.youtubeapp.login.di.fix
 import com.google.android.gms.common.GoogleApiAvailability
@@ -38,7 +38,7 @@ import pub.devrel.easypermissions.EasyPermissions
 @OptIn(ExperimentalCoroutinesApi::class)
 class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
-  private val module: LoginModule = (application as App).appComponent.loginModule.fix()
+  private val module: LoginModule by lazy { (application as App).appComponent.loginModule.fix() }
 
   private lateinit var viewModel: LoginViewModel
 
@@ -50,11 +50,13 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     with(viewModel) {
       navToPlaylist.observe()() { navigateToPlaylist() }
       showGooglePlayServicesAvailabilityErrorDialog.observe()() { showGooglePlayServicesAvailabilityErrorDialog(it) }
-      chooseAccount.observe()() { chooseAccount() }
+      chooseAccount.observe()() { chooseAccount(module.parcelableUtil.unmarshall(it.first, Intent.CREATOR), it.second) }
       noNetwork.observe()() { noNetworkError() }
     }
 
     setupListeners()
+
+    getResultsFromApi()
   }
 
   override fun onActivityResult(
@@ -105,7 +107,8 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
   }
 
   private fun navigateToPlaylist() {
-    module.navigator.navigateTo(Playlist)
+    module.navigator(this).navigateTo(Playlist)
+    finish()
   }
 
   private fun showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode: Int) {
@@ -126,16 +129,14 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
   }
 
-  @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
-  private fun chooseAccount() {
+  private fun chooseAccount(intent: Intent, selectedAccountName: AccountName?) {
     if (EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
-      val accountName = getSelectedAccountName()
-      if (accountName != null) {
+      if (selectedAccountName != null) {
         getResultsFromApi()
       } else {
         // Start a dialog from which the user can choose an account
         startActivityForResult(
-          newChooseAccountIntent(),
+          intent,
           REQUEST_ACCOUNT_PICKER
         )
       }
@@ -150,21 +151,14 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
   }
 
+  @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
   private fun getResultsFromApi() {
     module.run { viewModel.run { loginPlease() } }
   }
 
-  private fun getSelectedAccountName(): AccountName? =
-    module.run { viewModel.run { getSelectedAccountName() } }
-
   private fun setSelectedAccountName(accountName: AccountName) {
     module.run { viewModel.run { setSelectedAccountName(accountName) } }
   }
-
-  private fun newChooseAccountIntent(): Intent? =
-    module.run { viewModel.run { newChooseAccountIntent() } }?.let {
-      module.parcelableUtil.unmarshall(it, Intent.CREATOR)
-    }
 }
 
 private const val REQUEST_ACCOUNT_PICKER = 1000

@@ -15,13 +15,14 @@
  */
 package com.github.hadilq.youtubeapp.playlists.di
 
+import com.github.hadilq.youtubeapp.core.di.CoreModule
 import com.github.hadilq.youtubeapp.domain.di.DomainModule
 import com.github.hadilq.youtubeapp.domain.di.PlaylistsModuleSyntax
 import com.github.hadilq.youtubeapp.playlists.PlaylistViewHolderFactory
 import com.github.hadilq.youtubeapp.playlists.PlaylistsAdapter
 import com.github.hadilq.youtubeapp.playlists.PlaylistsViewModelFactory
 
-interface PlaylistsModule : DomainModule {
+interface PlaylistsModule : DomainModule, CoreModule {
 
   val playlistsViewModelFactory: PlaylistsViewModelFactory
 

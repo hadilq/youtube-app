@@ -16,7 +16,6 @@
 package com.github.hadilq.youtubeapp.di
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
 import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
 import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository

@@ -29,7 +29,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 @OptIn(ExperimentalCoroutinesApi::class)
 class PlaylistsActivity : AppCompatActivity() {
 
-  private val module: PlaylistsModule = (application as App).appComponent.playlistsModule.fix()
+  private val module: PlaylistsModule by lazy { (application as App).appComponent.playlistsModule.fix() }
 
   private lateinit var viewModel: PlaylistsViewModel
 

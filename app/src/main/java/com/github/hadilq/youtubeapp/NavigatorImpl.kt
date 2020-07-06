@@ -15,20 +15,18 @@
  */
 package com.github.hadilq.youtubeapp
 
+import android.content.Context
 import android.content.Intent
-import com.github.hadilq.youtubeapp.di.AppModule
-import com.github.hadilq.youtubeapp.domain.navigation.Navigator
-import com.github.hadilq.youtubeapp.domain.navigation.Page
-import com.github.hadilq.youtubeapp.domain.navigation.Playlist
+import com.github.hadilq.youtubeapp.core.navigation.Navigator
+import com.github.hadilq.youtubeapp.core.navigation.Page
+import com.github.hadilq.youtubeapp.core.navigation.Playlist
 import com.github.hadilq.youtubeapp.playlists.PlaylistsActivity
 
 class NavigatorImpl(
-  private val appModule: AppModule
+  private val context: Context
 ) : Navigator {
 
   override fun navigateTo(page: Page) = when (page) {
-    Playlist -> appModule.applicationContext.startActivity(
-      Intent(appModule.applicationContext, PlaylistsActivity::class.java)
-    )
+    Playlist -> context.startActivity(Intent(context, PlaylistsActivity::class.java))
   }
 }

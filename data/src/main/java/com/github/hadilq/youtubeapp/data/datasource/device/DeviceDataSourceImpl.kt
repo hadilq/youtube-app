@@ -19,7 +19,6 @@ import com.github.hadilq.youtubeapp.data.di.DataModule
 
 class DeviceDataSourceImpl : DeviceDataSource {
 
-  override suspend fun DataModule.isDeviceOnline(): Boolean {
-    TODO("Not yet implemented")
-  }
+  override suspend fun DataModule.isDeviceOnline(): Boolean =
+    connectivityManager.activeNetworkInfo?.isConnected ?: false
 }
