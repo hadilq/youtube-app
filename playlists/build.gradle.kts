@@ -26,10 +26,9 @@ val versionTargetSdk: String by project
 val versionAndroidxCore: String by project
 val versionAndroidxAppcompat: String by project
 val versionComGoogleAndroidMaterial: String by project
-val versionGooglePlayServices: String by project
 val versionCoroutineLifecycle: String by project
 val versionAndroidxConstraintLayout: String by project
-val versionEasyPermission: String by project
+val versionPaging: String by project
 val versionJunit: String by project
 val versionAndroidxTestExt: String by project
 val versionAndroidxTestEspresso: String by project
@@ -58,13 +57,14 @@ dependencies {
   implementation("androidx.core:core-ktx:$versionAndroidxCore")
   implementation("androidx.appcompat:appcompat:$versionAndroidxAppcompat")
   implementation("com.google.android.material:material:$versionComGoogleAndroidMaterial")
-  implementation("com.google.android.gms:play-services-auth:$versionGooglePlayServices")
   implementation("com.github.hadilq:coroutinelifecyclehandler:$versionCoroutineLifecycle")
   implementation("androidx.constraintlayout:constraintlayout:$versionAndroidxConstraintLayout")
-  implementation("pub.devrel:easypermissions:$versionEasyPermission")
+  implementation("androidx.paging:paging-runtime:$versionPaging")
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:$versionJunit")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$versionJunit")
+  testImplementation("androidx.paging:paging-common:$versionPaging")
+
   androidTestImplementation("androidx.test.ext:junit:$versionAndroidxTestExt")
   androidTestImplementation("androidx.test.espresso:espresso-core:$versionAndroidxTestEspresso")
 }

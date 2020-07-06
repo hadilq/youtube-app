@@ -18,4 +18,6 @@ package com.github.hadilq.youtubeapp.domain.di
 interface AppComponent {
 
   val loginModule: LoginModuleSyntax
+
+  val playlistsModule: PlaylistsModuleSyntax
 }

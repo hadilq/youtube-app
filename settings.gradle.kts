@@ -13,5 +13,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-include(":login", ":data", ":domain", ":app")
+include(":app", ":data", ":domain", ":core", ":login", ":playlists")
 rootProject.name = "youtube-app"

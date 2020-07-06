@@ -28,7 +28,7 @@ import com.github.hadilq.youtubeapp.domain.usecase.IsGoogleUserResolvableError
 import com.github.hadilq.youtubeapp.domain.usecase.NewChooseAccountIntent
 import com.github.hadilq.youtubeapp.domain.usecase.SetSelectedAccountName
 
-interface DomainModule : DataModuleSyntax, LoginModuleSyntax {
+interface DomainModule : DataModuleSyntax, LoginModuleSyntax, PlaylistsModuleSyntax {
 
   val navigator: Navigator
 

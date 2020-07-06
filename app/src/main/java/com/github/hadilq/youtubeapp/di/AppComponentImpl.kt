@@ -22,6 +22,7 @@ import com.github.hadilq.youtubeapp.data.repository.GooglePlayRepositoryImpl
 import com.github.hadilq.youtubeapp.data.repository.YoutubeRepositoryImpl
 import com.github.hadilq.youtubeapp.domain.di.AppComponent
 import com.github.hadilq.youtubeapp.domain.di.LoginModuleSyntax
+import com.github.hadilq.youtubeapp.domain.di.PlaylistsModuleSyntax
 import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
 import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
 import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
@@ -51,7 +52,18 @@ class AppComponentImpl(
         appModule = appModule,
         domainModule = domainModule,
         dataModule = DataModuleImpl(appModule),
-        loginModule = LoginModuleImpl(appModule, domainModule)
+        loginModule = LoginModuleImpl(domainModule)
+      )
+    }
+
+  override val playlistsModule: PlaylistsModuleSyntax
+    get() {
+      val domainModule = DomainModuleImpl(appModule)
+      return AllNeedsOfPlaylistsModule(
+        appModule = appModule,
+        domainModule = domainModule,
+        dataModule = DataModuleImpl(appModule),
+        playlistsModule = PlaylistsModuleImpl(domainModule)
       )
     }
 }

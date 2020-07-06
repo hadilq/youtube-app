@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.di
+package com.github.hadilq.youtubeapp.core.util
 
-import com.github.hadilq.youtubeapp.domain.di.DomainModule
-import com.github.hadilq.youtubeapp.login.di.AbstractLoginModule
+import com.github.hadilq.coroutinelifecyclehandler.Entry
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlin.coroutines.EmptyCoroutineContext
 
-class LoginModuleImpl(
-  private val domainModule: DomainModule
-) : AbstractLoginModule(), DomainModule by domainModule
+fun exec(block: suspend CoroutineScope.() -> Unit) =
+  Entry { CoroutineScope(EmptyCoroutineContext).launch(block = block) }

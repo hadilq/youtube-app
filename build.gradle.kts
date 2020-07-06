@@ -15,6 +15,7 @@
  */
 buildscript {
   val versionKotlin: String by project
+  val versionNavigation: String by project
   repositories {
     google()
     jcenter()

@@ -27,7 +27,7 @@ class DomainModuleImpl(
 ) : AbstractDomainModule() {
 
   override val navigator: Navigator
-    get() = NavigatorImpl()
+    get() = NavigatorImpl(appModule)
 
   override val youtubeRepository: YoutubeRepository
     get() = appModule.youtubeRepository

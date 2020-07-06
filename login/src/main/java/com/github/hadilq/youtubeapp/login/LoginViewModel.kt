@@ -20,7 +20,7 @@ import com.github.hadilq.androidlifecyclehandler.SLife
 import com.github.hadilq.youtubeapp.domain.entity.AccountName
 import com.github.hadilq.youtubeapp.domain.entity.Intent
 import com.github.hadilq.youtubeapp.login.di.LoginModule
-import com.github.hadilq.youtubeapp.login.util.exec
+import com.github.hadilq.youtubeapp.core.util.exec
 import com.google.android.gms.common.ConnectionResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

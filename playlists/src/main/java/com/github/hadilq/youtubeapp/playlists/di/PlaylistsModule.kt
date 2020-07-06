@@ -13,11 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.di
+package com.github.hadilq.youtubeapp.playlists.di
 
 import com.github.hadilq.youtubeapp.domain.di.DomainModule
-import com.github.hadilq.youtubeapp.login.di.AbstractLoginModule
+import com.github.hadilq.youtubeapp.domain.di.PlaylistsModuleSyntax
+import com.github.hadilq.youtubeapp.playlists.PlaylistViewHolderFactory
+import com.github.hadilq.youtubeapp.playlists.PlaylistsAdapter
+import com.github.hadilq.youtubeapp.playlists.PlaylistsViewModelFactory
 
-class LoginModuleImpl(
-  private val domainModule: DomainModule
-) : AbstractLoginModule(), DomainModule by domainModule
+interface PlaylistsModule : DomainModule {
+
+  val playlistsViewModelFactory: PlaylistsViewModelFactory
+
+  val playlistViewHolderFactory: PlaylistViewHolderFactory
+
+  val playlistsAdapter: PlaylistsAdapter
+}
+
+fun PlaylistsModuleSyntax.fix() = this as PlaylistsModule
