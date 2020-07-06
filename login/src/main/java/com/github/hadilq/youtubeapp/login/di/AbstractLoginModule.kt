@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.domain.entity
+package com.github.hadilq.youtubeapp.login.di
 
-typealias Intent = ByteArray
+import com.github.hadilq.youtubeapp.login.LoginViewModelFactory
+import com.github.hadilq.youtubeapp.login.util.ParcelableUtil
 
-typealias ConnectionResult = Int
+abstract class AbstractLoginModule : LoginModule {
 
-typealias AccountName = String
+  override val loginViewModelFactory = LoginViewModelFactory()
 
-typealias Query = String
+  override val parcelableUtil: ParcelableUtil
+    get() = ParcelableUtil()
+}

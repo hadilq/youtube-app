@@ -13,12 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.domain.entity
+package com.github.hadilq.youtubeapp.domain.di
 
-typealias Intent = ByteArray
-
-typealias ConnectionResult = Int
-
-typealias AccountName = String
-
-typealias Query = String
+interface LoginModuleSyntax

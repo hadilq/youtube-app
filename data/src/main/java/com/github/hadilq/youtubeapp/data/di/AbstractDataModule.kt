@@ -16,17 +16,22 @@
 package com.github.hadilq.youtubeapp.data.di
 
 import androidx.room.Room
-import com.github.hadilq.youtubeapp.data.api.youtubeapi.YoutubeDataSourceImpl
 import com.github.hadilq.youtubeapp.data.database.AppDatabase
 import com.github.hadilq.youtubeapp.data.database.dao.PlaylistDao
 import com.github.hadilq.youtubeapp.data.database.dao.PlaylistItemDao
 import com.github.hadilq.youtubeapp.data.database.dao.PlaylistItemPageTokenDao
 import com.github.hadilq.youtubeapp.data.database.dao.PlaylistPageTokenDao
+import com.github.hadilq.youtubeapp.data.datasource.device.DeviceDataSource
+import com.github.hadilq.youtubeapp.data.datasource.device.DeviceDataSourceImpl
+import com.github.hadilq.youtubeapp.data.datasource.google.GoogleDataSource
+import com.github.hadilq.youtubeapp.data.datasource.google.GoogleDataSourceImpl
+import com.github.hadilq.youtubeapp.data.datasource.youtube.YoutubeDataSource
+import com.github.hadilq.youtubeapp.data.datasource.youtube.YoutubeDataSourceImpl
 import com.github.hadilq.youtubeapp.data.paging.PlaylistItemRemoteMediator
 import com.github.hadilq.youtubeapp.data.paging.PlaylistRemoteMediator
-import com.github.hadilq.youtubeapp.data.repository.YoutubeRepositoryImpl
 import com.github.hadilq.youtubeapp.data.util.ParcelableUtil
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.jackson2.JacksonFactory
@@ -36,18 +41,21 @@ import com.google.api.services.youtube.YouTubeScopes
 
 abstract class AbstractDataModule : DataModule {
 
-  override val youtubeDataSource by lazy { YoutubeDataSourceImpl() }
+  override val youtubeDataSource: YoutubeDataSource by lazy { YoutubeDataSourceImpl() }
 
-  override val youtubeRepositoryImpl: YoutubeRepositoryImpl by lazy {
-    YoutubeRepositoryImpl()
-  }
+  override val googleDataSource: GoogleDataSource by lazy { GoogleDataSourceImpl() }
+
+  override val deviceDataSource: DeviceDataSource by lazy { DeviceDataSourceImpl() }
 
   override val googleAccountCredential: GoogleAccountCredential by lazy {
-    GoogleAccountCredential.usingOAuth2(context, arrayListOf(YouTubeScopes.YOUTUBE_READONLY))
+    GoogleAccountCredential.usingOAuth2(applicationContext, arrayListOf(YouTubeScopes.YOUTUBE_READONLY))
       .setBackOff(ExponentialBackOff())
   }
 
-  override val parcelableUtil: ParcelableUtil by lazy {
+  override val googleApiAvailability: GoogleApiAvailability
+    get() = GoogleApiAvailability.getInstance()
+
+  override val dataParcelableUtil: ParcelableUtil by lazy {
     ParcelableUtil()
   }
 
@@ -61,7 +69,7 @@ abstract class AbstractDataModule : DataModule {
 
   override val db: AppDatabase by lazy {
     Room.databaseBuilder(
-      context,
+      applicationContext,
       AppDatabase::class.java, "youtube-app.db"
     ).build()
   }

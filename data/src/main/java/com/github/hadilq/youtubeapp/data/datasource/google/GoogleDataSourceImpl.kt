@@ -13,12 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.domain.entity
+package com.github.hadilq.youtubeapp.data.datasource.google
 
-typealias Intent = ByteArray
+import com.github.hadilq.youtubeapp.data.di.DataModule
+import com.github.hadilq.youtubeapp.domain.entity.ConnectionResult
 
-typealias ConnectionResult = Int
+class GoogleDataSourceImpl : GoogleDataSource {
 
-typealias AccountName = String
+  override suspend fun DataModule.isGooglePlayServicesAvailable(): ConnectionResult =
+    googleApiAvailability.isGooglePlayServicesAvailable(applicationContext)
 
-typealias Query = String
+  override suspend fun DataModule.isUserResolvableError(connectionResult: ConnectionResult): Boolean =
+    googleApiAvailability.isUserResolvableError(connectionResult)
+}

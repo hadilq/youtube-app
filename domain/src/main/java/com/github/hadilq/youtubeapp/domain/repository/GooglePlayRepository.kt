@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.domain.entity
+package com.github.hadilq.youtubeapp.domain.repository
 
-typealias Intent = ByteArray
+import com.github.hadilq.youtubeapp.domain.di.DomainModule
+import com.github.hadilq.youtubeapp.domain.entity.ConnectionResult
 
-typealias ConnectionResult = Int
+interface GooglePlayRepository {
 
-typealias AccountName = String
+  suspend fun DomainModule.isGooglePlayServicesAvailable(): ConnectionResult
 
-typealias Query = String
+  suspend fun DomainModule.isUserResolvableError(connectionResult: ConnectionResult): Boolean
+}

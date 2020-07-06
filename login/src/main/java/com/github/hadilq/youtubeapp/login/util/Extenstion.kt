@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.domain.entity
+package com.github.hadilq.youtubeapp.login.util
 
-typealias Intent = ByteArray
+import com.github.hadilq.coroutinelifecyclehandler.Entry
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlin.coroutines.EmptyCoroutineContext
 
-typealias ConnectionResult = Int
-
-typealias AccountName = String
-
-typealias Query = String
+fun exec(block: suspend CoroutineScope.() -> Unit) =
+  Entry { CoroutineScope(EmptyCoroutineContext).launch(block = block) }

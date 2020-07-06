@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.domain.entity
+package com.github.hadilq.youtubeapp
 
-typealias Intent = ByteArray
+import com.github.hadilq.youtubeapp.domain.navigation.Navigator
+import com.github.hadilq.youtubeapp.domain.navigation.Page
 
-typealias ConnectionResult = Int
+class NavigatorImpl : Navigator {
 
-typealias AccountName = String
-
-typealias Query = String
+  override fun navigateTo(page: Page) {
+    TODO("Not yet implemented")
+  }
+}

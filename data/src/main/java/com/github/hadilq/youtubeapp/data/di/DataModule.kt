@@ -16,33 +16,48 @@
 package com.github.hadilq.youtubeapp.data.di
 
 import android.content.Context
-import com.github.hadilq.youtubeapp.data.api.youtubeapi.YoutubeDataSource
 import com.github.hadilq.youtubeapp.data.database.AppDatabase
 import com.github.hadilq.youtubeapp.data.database.dao.PlaylistDao
 import com.github.hadilq.youtubeapp.data.database.dao.PlaylistItemDao
 import com.github.hadilq.youtubeapp.data.database.dao.PlaylistItemPageTokenDao
 import com.github.hadilq.youtubeapp.data.database.dao.PlaylistPageTokenDao
+import com.github.hadilq.youtubeapp.data.datasource.device.DeviceDataSource
+import com.github.hadilq.youtubeapp.data.datasource.google.GoogleDataSource
+import com.github.hadilq.youtubeapp.data.datasource.youtube.YoutubeDataSource
 import com.github.hadilq.youtubeapp.data.paging.PlaylistItemRemoteMediator
 import com.github.hadilq.youtubeapp.data.paging.PlaylistRemoteMediator
-import com.github.hadilq.youtubeapp.data.repository.YoutubeRepositoryImpl
 import com.github.hadilq.youtubeapp.data.util.ParcelableUtil
 import com.github.hadilq.youtubeapp.domain.di.DataModuleSyntax
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
+import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
+import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
+import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.services.youtube.YouTube
 import kotlinx.coroutines.CoroutineScope
 
 interface DataModule : DataModuleSyntax {
 
-  val context: Context
+  val applicationContext: Context
 
   val youtubeDataSource: YoutubeDataSource
 
-  val youtubeRepositoryImpl: YoutubeRepositoryImpl
+  val youtubeRepository: YoutubeRepository
+
+  val googleDataSource: GoogleDataSource
+
+  val googleRepository: GooglePlayRepository
+
+  val deviceDataSource: DeviceDataSource
+
+  val deviceRepository: DeviceRepository
 
   val googleAccountCredential: GoogleAccountCredential
 
-  val parcelableUtil: ParcelableUtil
+  val googleApiAvailability: GoogleApiAvailability
+
+  val dataParcelableUtil: ParcelableUtil
 
   val youtube: YouTube
 

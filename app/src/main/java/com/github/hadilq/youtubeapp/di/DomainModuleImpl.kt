@@ -15,21 +15,26 @@
  */
 package com.github.hadilq.youtubeapp.di
 
-import android.content.Context
+import com.github.hadilq.youtubeapp.NavigatorImpl
+import com.github.hadilq.youtubeapp.domain.di.AbstractDomainModule
+import com.github.hadilq.youtubeapp.domain.navigation.Navigator
 import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
 import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
 import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
 
-/**
- * All singletons must be define inside [AppModule]
- */
-interface AppModule {
+class DomainModuleImpl(
+  private val appModule: AppModule
+) : AbstractDomainModule() {
 
-  val applicationContext: Context
+  override val navigator: Navigator
+    get() = NavigatorImpl()
 
-  val youtubeRepository: YoutubeRepository
+  override val youtubeRepository: YoutubeRepository
+    get() = appModule.youtubeRepository
 
-  val googlePlayRepository: GooglePlayRepository
+  override val googlePlayRepository: GooglePlayRepository
+    get() = appModule.googlePlayRepository
 
-  val deviceRepository: DeviceRepository
+  override val deviceRepository: DeviceRepository
+    get() = appModule.deviceRepository
 }

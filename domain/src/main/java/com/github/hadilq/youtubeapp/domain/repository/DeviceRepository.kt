@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.domain.entity
+package com.github.hadilq.youtubeapp.domain.repository
 
-typealias Intent = ByteArray
+import com.github.hadilq.youtubeapp.domain.di.DomainModule
 
-typealias ConnectionResult = Int
+interface DeviceRepository {
 
-typealias AccountName = String
-
-typealias Query = String
+  suspend fun DomainModule.isDeviceOnline(): Boolean
+}

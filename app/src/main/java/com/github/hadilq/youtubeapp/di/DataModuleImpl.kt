@@ -16,20 +16,30 @@
 package com.github.hadilq.youtubeapp.di
 
 import android.content.Context
+import com.github.hadilq.youtubeapp.data.di.AbstractDataModule
 import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
 import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
 import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
-/**
- * All singletons must be define inside [AppModule]
- */
-interface AppModule {
+class DataModuleImpl(
+  private val appModule: AppModule
+) : AbstractDataModule() {
 
-  val applicationContext: Context
+  override val applicationContext: Context
+    get() = appModule.applicationContext
 
-  val youtubeRepository: YoutubeRepository
+  override val youtubeRepository: YoutubeRepository
+    get() = appModule.youtubeRepository
 
-  val googlePlayRepository: GooglePlayRepository
+  override val googleRepository: GooglePlayRepository
+    get() = appModule.googlePlayRepository
 
-  val deviceRepository: DeviceRepository
+  override val deviceRepository: DeviceRepository
+    get() = appModule.deviceRepository
+
+  override suspend fun <T> networkCall(block: suspend CoroutineScope.() -> T): T =
+    withContext(Dispatchers.IO, block)
 }

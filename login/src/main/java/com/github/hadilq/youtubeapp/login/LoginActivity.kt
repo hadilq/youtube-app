@@ -15,8 +15,118 @@
  */
 package com.github.hadilq.youtubeapp.login
 
+import android.Manifest
+import android.app.Dialog
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.github.hadilq.androidlifecyclehandler.provideLife
+import com.github.hadilq.coroutinelifecyclehandler.observe
+import com.github.hadilq.youtubeapp.domain.di.App
+import com.github.hadilq.youtubeapp.domain.entity.AccountName
+import com.github.hadilq.youtubeapp.domain.navigation.Playlist
+import com.github.hadilq.youtubeapp.login.di.LoginModule
+import com.github.hadilq.youtubeapp.login.di.fix
+import com.google.android.gms.common.GoogleApiAvailability
+import kotlinx.android.synthetic.main.login.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import pub.devrel.easypermissions.AfterPermissionGranted
+import pub.devrel.easypermissions.EasyPermissions
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class LoginActivity : AppCompatActivity() {
 
+  private val module: LoginModule = (application as App).appComponent.loginModule.fix()
+
+  private lateinit var viewModel: LoginViewModel
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.login)
+    viewModel = provideLife(module.loginViewModelFactory)
+
+    with(viewModel) {
+      navToPlaylist.observe()() { navigateToPlaylist() }
+      showGooglePlayServicesAvailabilityErrorDialog.observe()() { showGooglePlayServicesAvailabilityErrorDialog(it) }
+      chooseAccount.observe()() { chooseAccount() }
+      noNetwork.observe()() { noNetworkError() }
+    }
+
+    setupListeners()
+  }
+
+  private fun noNetworkError() {
+  }
+
+  private fun navigateToPlaylist() {
+    module.navigator.navigateTo(Playlist)
+  }
+
+  private fun showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode: Int) {
+    val apiAvailability = GoogleApiAvailability.getInstance()
+    val dialog: Dialog = apiAvailability.getErrorDialog(
+      this,
+      connectionStatusCode,
+      REQUEST_GOOGLE_PLAY_SERVICES
+    )
+    dialog.show()
+  }
+
+  private fun setupListeners() {
+    btnLogin.setOnClickListener {
+      btnLogin.isEnabled = false
+      getResultsFromApi()
+      btnLogin.isEnabled = true
+    }
+  }
+
+  @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
+  private fun chooseAccount() {
+    if (EasyPermissions.hasPermissions(
+        this, Manifest.permission.GET_ACCOUNTS
+      )
+    ) {
+      val accountName = getPreferences(Context.MODE_PRIVATE)
+        .getString(PREF_ACCOUNT_NAME, null)
+      if (accountName != null) {
+        setSelectedAccountName(accountName)
+        getResultsFromApi()
+      } else {
+        // Start a dialog from which the user can choose an account
+        startActivityForResult(
+          newChooseAccountIntent(),
+          REQUEST_ACCOUNT_PICKER
+        )
+      }
+    } else {
+      // Request the GET_ACCOUNTS permission via a user dialog
+      EasyPermissions.requestPermissions(
+        this,
+        "This app needs to access your Google account (via Contacts).",
+        REQUEST_PERMISSION_GET_ACCOUNTS,
+        Manifest.permission.GET_ACCOUNTS
+      )
+    }
+  }
+
+  private fun getResultsFromApi() {
+    module.run { viewModel.run { loginPlease() } }
+  }
+
+  private fun setSelectedAccountName(accountName: AccountName) {
+    module.run { viewModel.run { setSelectedAccountName(accountName) } }
+  }
+
+  private fun newChooseAccountIntent(): Intent? =
+    module.run { viewModel.run { newChooseAccountIntent() } }?.let {
+      module.parcelableUtil.unmarshall(it, Intent.CREATOR)
+    }
 }
+
+private const val REQUEST_ACCOUNT_PICKER = 1000
+private const val REQUEST_AUTHORIZATION = 1001
+private const val REQUEST_GOOGLE_PLAY_SERVICES = 1002
+private const val REQUEST_PERMISSION_GET_ACCOUNTS = 1003
+private const val PREF_ACCOUNT_NAME = "accountName"
+

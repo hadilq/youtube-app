@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.domain.entity
+package com.github.hadilq.youtubeapp.domain.usecase
 
-typealias Intent = ByteArray
+import com.github.hadilq.youtubeapp.domain.di.DomainModule
+import com.github.hadilq.youtubeapp.domain.entity.ConnectionResult
 
-typealias ConnectionResult = Int
+class IsGoogleUserResolvableError {
 
-typealias AccountName = String
-
-typealias Query = String
+  suspend fun DomainModule.execute(connectionStatusCode: ConnectionResult): Boolean =
+    googlePlayRepository.run { isUserResolvableError(connectionStatusCode) }
+}

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.data.api.youtubeapi
+package com.github.hadilq.youtubeapp.data.datasource.youtube
 
 import com.github.hadilq.youtubeapp.data.di.DataModule
 import com.github.hadilq.youtubeapp.domain.entity.AccountName
@@ -37,7 +37,7 @@ class YoutubeDataSourceImpl : YoutubeDataSource {
   }
 
   override fun DataModule.newChooseAccountIntent(): Intent =
-    parcelableUtil.marshall(googleAccountCredential.newChooseAccountIntent())
+    dataParcelableUtil.marshall(googleAccountCredential.newChooseAccountIntent())
 
   override suspend fun DataModule.playLists(
     query: Query?,

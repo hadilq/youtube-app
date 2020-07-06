@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.data.api.youtubeapi
+package com.github.hadilq.youtubeapp.data.datasource.youtube
 
 import com.github.hadilq.youtubeapp.data.di.DataModule
 import com.github.hadilq.youtubeapp.domain.entity.AccountName

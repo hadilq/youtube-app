@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.domain.entity
+package com.github.hadilq.youtubeapp.di
 
-typealias Intent = ByteArray
+import com.github.hadilq.youtubeapp.domain.di.DomainModule
+import com.github.hadilq.youtubeapp.login.di.AbstractLoginModule
 
-typealias ConnectionResult = Int
-
-typealias AccountName = String
-
-typealias Query = String
+class LoginModuleImpl(
+  private val appModule: AppModule,
+  private val domainModule: DomainModule
+) : AbstractLoginModule(), DomainModule by domainModule

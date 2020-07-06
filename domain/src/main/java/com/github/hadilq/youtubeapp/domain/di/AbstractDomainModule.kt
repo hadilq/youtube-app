@@ -15,10 +15,6 @@
  */
 package com.github.hadilq.youtubeapp.domain.di
 
-import com.github.hadilq.youtubeapp.domain.navigation.Navigator
-import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
-import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
-import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
 import com.github.hadilq.youtubeapp.domain.usecase.GetPlaylistItems
 import com.github.hadilq.youtubeapp.domain.usecase.GetPlaylists
 import com.github.hadilq.youtubeapp.domain.usecase.GetSelectedAccountName
@@ -28,29 +24,29 @@ import com.github.hadilq.youtubeapp.domain.usecase.IsGoogleUserResolvableError
 import com.github.hadilq.youtubeapp.domain.usecase.NewChooseAccountIntent
 import com.github.hadilq.youtubeapp.domain.usecase.SetSelectedAccountName
 
-interface DomainModule : DataModuleSyntax, LoginModuleSyntax {
+abstract class AbstractDomainModule : DomainModule {
 
-  val navigator: Navigator
+  override val getPlaylists: GetPlaylists
+    get() = GetPlaylists()
 
-  val youtubeRepository: YoutubeRepository
+  override val getPlaylistItems: GetPlaylistItems
+    get() = GetPlaylistItems()
 
-  val googlePlayRepository: GooglePlayRepository
+  override val getSelectedAccountName: GetSelectedAccountName
+    get() = GetSelectedAccountName()
 
-  val deviceRepository: DeviceRepository
+  override val isDeviceOnline: IsDeviceOnline
+    get() = IsDeviceOnline()
 
-  val getPlaylists: GetPlaylists
+  override val isGooglePlayServicesAvailable: IsGooglePlayServicesAvailable
+    get() = IsGooglePlayServicesAvailable()
 
-  val getPlaylistItems: GetPlaylistItems
+  override val isGoogleUserResolvableError: IsGoogleUserResolvableError
+    get() = IsGoogleUserResolvableError()
 
-  val getSelectedAccountName: GetSelectedAccountName
+  override val newChooseAccountIntent: NewChooseAccountIntent
+    get() = NewChooseAccountIntent()
 
-  val isDeviceOnline: IsDeviceOnline
-
-  val isGooglePlayServicesAvailable: IsGooglePlayServicesAvailable
-
-  val isGoogleUserResolvableError: IsGoogleUserResolvableError
-
-  val newChooseAccountIntent: NewChooseAccountIntent
-
-  val setSelectedAccountName: SetSelectedAccountName
+  override val setSelectedAccountName: SetSelectedAccountName
+    get() = SetSelectedAccountName()
 }

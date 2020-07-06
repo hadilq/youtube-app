@@ -18,21 +18,12 @@ package com.github.hadilq.youtubeapp
 import android.app.Application
 import android.content.Context
 import androidx.multidex.MultiDex
-import com.github.hadilq.youtubeapp.data.di.AbstractDataModule
-import com.github.hadilq.youtubeapp.di.AppModule
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.github.hadilq.youtubeapp.di.AppComponentImpl
+import com.github.hadilq.youtubeapp.domain.di.App
 
-class App : Application() {
+class AppImpl : Application(), App {
 
-  private val appModule = AppModule(object : AbstractDataModule() {
-
-    override val context: Context
-      get() = applicationContext
-
-    override suspend fun <T> networkCall(block: suspend CoroutineScope.() -> T): T = withContext(Dispatchers.IO, block)
-  })
+  override val appComponent = AppComponentImpl(this)
 
   override fun attachBaseContext(base: Context) {
     super.attachBaseContext(base)
