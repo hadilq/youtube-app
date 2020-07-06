@@ -16,9 +16,9 @@
 package com.github.hadilq.youtubeapp.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.github.hadilq.youtubeapp.data.di.AbstractDataModule
 import com.github.hadilq.youtubeapp.data.di.DataModule
-import com.github.hadilq.youtubeapp.data.util.ParcelableUtil
 import com.github.hadilq.youtubeapp.domain.di.AbstractDomainModule
 import com.github.hadilq.youtubeapp.domain.di.DomainModule
 import com.github.hadilq.youtubeapp.domain.navigation.Navigator
@@ -48,6 +48,9 @@ class AllNeedsOfLoginModule(
 
   override val applicationContext: Context
     get() = appModule.applicationContext
+
+  override val sharedPreferences: SharedPreferences
+    get() = dataModule.sharedPreferences
 
   override val navigator: Navigator
     get() = domainModule.navigator

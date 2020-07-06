@@ -26,13 +26,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface YoutubeRepository {
 
-  fun DomainModule.getSelectedAccountName(): AccountName?
+  suspend fun DomainModule.getSelectedAccountName(): AccountName?
 
-  fun DomainModule.setSelectedAccountName(accountName: AccountName)
+  suspend fun DomainModule.setSelectedAccountName(accountName: AccountName)
 
-  fun DomainModule.newChooseAccountIntent(): Intent
+  suspend fun DomainModule.newChooseAccountIntent(): Intent
 
-  fun DomainModule.startLoadingPlaylist(query: Query? = null): Flow<PagingData<Playlist>>
+  suspend fun DomainModule.startLoadingPlaylist(query: Query? = null): Flow<PagingData<Playlist>>
 
-  fun DomainModule.startLoadingPlaylistItem(playlist: Playlist): Flow<PagingData<PlaylistItem>>
+  suspend fun DomainModule.startLoadingPlaylistItem(playlist: Playlist): Flow<PagingData<PlaylistItem>>
 }

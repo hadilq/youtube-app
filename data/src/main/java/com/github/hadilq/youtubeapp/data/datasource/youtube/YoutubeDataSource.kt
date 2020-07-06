@@ -25,11 +25,11 @@ import com.github.hadilq.youtubeapp.domain.entity.Query
 
 interface YoutubeDataSource {
 
-  fun DataModule.getSelectedAccountName(): AccountName?
+  suspend fun DataModule.getSelectedAccountName(): AccountName?
 
-  fun DataModule.setSelectedAccountName(accountName: AccountName)
+  suspend fun DataModule.setSelectedAccountName(accountName: AccountName)
 
-  fun DataModule.newChooseAccountIntent(): Intent
+  suspend fun DataModule.newChooseAccountIntent(): Intent
 
   suspend fun DataModule.playLists(
     query: Query? = null,

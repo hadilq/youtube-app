@@ -16,8 +16,9 @@
 package com.github.hadilq.youtubeapp.login
 
 import android.Manifest
+import android.accounts.AccountManager
+import android.app.Activity
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -35,7 +36,7 @@ import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
   private val module: LoginModule = (application as App).appComponent.loginModule.fix()
 
@@ -56,7 +57,51 @@ class LoginActivity : AppCompatActivity() {
     setupListeners()
   }
 
+  override fun onActivityResult(
+    requestCode: Int,
+    resultCode: Int,
+    data: Intent?
+  ) {
+    super.onActivityResult(requestCode, resultCode, data)
+    when (requestCode) {
+      REQUEST_GOOGLE_PLAY_SERVICES -> if (resultCode != Activity.RESULT_OK) {
+        noGooglePlayService()
+      } else {
+        getResultsFromApi()
+      }
+      REQUEST_ACCOUNT_PICKER -> if (resultCode == Activity.RESULT_OK && data != null && data.extras != null
+      ) {
+        val accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)
+        if (accountName != null) {
+          setSelectedAccountName(accountName)
+          getResultsFromApi()
+        }
+      }
+      REQUEST_AUTHORIZATION -> if (resultCode == Activity.RESULT_OK) {
+        getResultsFromApi()
+      }
+    }
+  }
+
+  override fun onRequestPermissionsResult(
+    requestCode: Int,
+    permissions: Array<String>,
+    grantResults: IntArray
+  ) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    EasyPermissions.onRequestPermissionsResult(
+      requestCode, permissions, grantResults, this
+    )
+  }
+
+  override fun onPermissionsGranted(requestCode: Int, list: List<String>) = Unit
+
+  override fun onPermissionsDenied(requestCode: Int, list: List<String>) = Unit
+
   private fun noNetworkError() {
+  }
+
+  private fun noGooglePlayService() {
   }
 
   private fun navigateToPlaylist() {
@@ -83,14 +128,9 @@ class LoginActivity : AppCompatActivity() {
 
   @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
   private fun chooseAccount() {
-    if (EasyPermissions.hasPermissions(
-        this, Manifest.permission.GET_ACCOUNTS
-      )
-    ) {
-      val accountName = getPreferences(Context.MODE_PRIVATE)
-        .getString(PREF_ACCOUNT_NAME, null)
+    if (EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)) {
+      val accountName = getSelectedAccountName()
       if (accountName != null) {
-        setSelectedAccountName(accountName)
         getResultsFromApi()
       } else {
         // Start a dialog from which the user can choose an account
@@ -114,6 +154,9 @@ class LoginActivity : AppCompatActivity() {
     module.run { viewModel.run { loginPlease() } }
   }
 
+  private fun getSelectedAccountName(): AccountName? =
+    module.run { viewModel.run { getSelectedAccountName() } }
+
   private fun setSelectedAccountName(accountName: AccountName) {
     module.run { viewModel.run { setSelectedAccountName(accountName) } }
   }
@@ -128,5 +171,4 @@ private const val REQUEST_ACCOUNT_PICKER = 1000
 private const val REQUEST_AUTHORIZATION = 1001
 private const val REQUEST_GOOGLE_PLAY_SERVICES = 1002
 private const val REQUEST_PERMISSION_GET_ACCOUNTS = 1003
-private const val PREF_ACCOUNT_NAME = "accountName"
 

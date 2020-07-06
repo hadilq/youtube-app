@@ -16,6 +16,7 @@
 package com.github.hadilq.youtubeapp.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.github.hadilq.youtubeapp.data.di.AbstractDataModule
 import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
 import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
@@ -30,6 +31,9 @@ class DataModuleImpl(
 
   override val applicationContext: Context
     get() = appModule.applicationContext
+
+  override val sharedPreferences: SharedPreferences
+    get() = applicationContext.getSharedPreferences("Youtube-App", Context.MODE_PRIVATE)
 
   override val youtubeRepository: YoutubeRepository
     get() = appModule.youtubeRepository

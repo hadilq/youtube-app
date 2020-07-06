@@ -16,6 +16,7 @@
 package com.github.hadilq.youtubeapp.domain.usecase
 
 import com.github.hadilq.youtubeapp.domain.di.FakeDomainModule
+import io.mockk.coEvery
 import io.mockk.every
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -27,14 +28,12 @@ internal class GetSelectedAccountNameTest {
   fun execute() = with(FakeDomainModule()) {
     val anyAccountName = "AnyAccountName"
     runBlocking {
-      with(youtubeRepository) {
-        every { getSelectedAccountName() } returns anyAccountName
+      with(youtubeRepository) { coEvery { getSelectedAccountName() } returns anyAccountName}
         val usecase = GetSelectedAccountName()
 
         val result = usecase.run { execute() }
 
         assertEquals(result, anyAccountName)
-      }
     }
   }
 }

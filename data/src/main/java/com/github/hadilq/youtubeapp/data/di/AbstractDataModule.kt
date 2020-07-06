@@ -25,6 +25,8 @@ import com.github.hadilq.youtubeapp.data.datasource.device.DeviceDataSource
 import com.github.hadilq.youtubeapp.data.datasource.device.DeviceDataSourceImpl
 import com.github.hadilq.youtubeapp.data.datasource.google.GoogleDataSource
 import com.github.hadilq.youtubeapp.data.datasource.google.GoogleDataSourceImpl
+import com.github.hadilq.youtubeapp.data.datasource.preference.PreferencesDataSource
+import com.github.hadilq.youtubeapp.data.datasource.preference.PreferencesDataSourceImpl
 import com.github.hadilq.youtubeapp.data.datasource.youtube.YoutubeDataSource
 import com.github.hadilq.youtubeapp.data.datasource.youtube.YoutubeDataSourceImpl
 import com.github.hadilq.youtubeapp.data.paging.PlaylistItemRemoteMediator
@@ -40,6 +42,8 @@ import com.google.api.services.youtube.YouTube
 import com.google.api.services.youtube.YouTubeScopes
 
 abstract class AbstractDataModule : DataModule {
+
+  override val preferencesDataSource: PreferencesDataSource by lazy { PreferencesDataSourceImpl() }
 
   override val youtubeDataSource: YoutubeDataSource by lazy { YoutubeDataSourceImpl() }
 

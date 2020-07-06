@@ -16,7 +16,7 @@
 package com.github.hadilq.youtubeapp.domain.usecase
 
 import com.github.hadilq.youtubeapp.domain.di.FakeDomainModule
-import io.mockk.every
+import io.mockk.coEvery
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -27,14 +27,12 @@ internal class NewChooseAccountIntentTest {
   fun execute() = with(FakeDomainModule()) {
     val intent = byteArrayOf()
     runBlocking {
-      with(youtubeRepository) {
-        every { newChooseAccountIntent() } returns intent
-        val usecase = NewChooseAccountIntent()
+      with(youtubeRepository) { coEvery { newChooseAccountIntent() } returns intent }
+      val usecase = NewChooseAccountIntent()
 
-        val result = usecase.run { execute() }
+      val result = usecase.run { execute() }
 
-        assertEquals(result, intent)
-      }
+      assertEquals(result, intent)
     }
   }
 }

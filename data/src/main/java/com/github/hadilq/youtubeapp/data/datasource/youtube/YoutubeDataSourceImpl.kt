@@ -30,13 +30,13 @@ import com.google.api.services.youtube.model.VideoListResponse
 @Suppress("BlockingMethodInNonBlockingContext")
 class YoutubeDataSourceImpl : YoutubeDataSource {
 
-  override fun DataModule.getSelectedAccountName(): AccountName? = googleAccountCredential.selectedAccountName
+  override suspend fun DataModule.getSelectedAccountName(): AccountName? = googleAccountCredential.selectedAccountName
 
-  override fun DataModule.setSelectedAccountName(accountName: AccountName) {
+  override suspend fun DataModule.setSelectedAccountName(accountName: AccountName) {
     googleAccountCredential.selectedAccountName = accountName
   }
 
-  override fun DataModule.newChooseAccountIntent(): Intent =
+  override suspend fun DataModule.newChooseAccountIntent(): Intent =
     dataParcelableUtil.marshall(googleAccountCredential.newChooseAccountIntent())
 
   override suspend fun DataModule.playLists(

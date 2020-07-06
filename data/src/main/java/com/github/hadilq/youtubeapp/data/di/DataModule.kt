@@ -16,6 +16,7 @@
 package com.github.hadilq.youtubeapp.data.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.github.hadilq.youtubeapp.data.database.AppDatabase
 import com.github.hadilq.youtubeapp.data.database.dao.PlaylistDao
 import com.github.hadilq.youtubeapp.data.database.dao.PlaylistItemDao
@@ -23,6 +24,7 @@ import com.github.hadilq.youtubeapp.data.database.dao.PlaylistItemPageTokenDao
 import com.github.hadilq.youtubeapp.data.database.dao.PlaylistPageTokenDao
 import com.github.hadilq.youtubeapp.data.datasource.device.DeviceDataSource
 import com.github.hadilq.youtubeapp.data.datasource.google.GoogleDataSource
+import com.github.hadilq.youtubeapp.data.datasource.preference.PreferencesDataSource
 import com.github.hadilq.youtubeapp.data.datasource.youtube.YoutubeDataSource
 import com.github.hadilq.youtubeapp.data.paging.PlaylistItemRemoteMediator
 import com.github.hadilq.youtubeapp.data.paging.PlaylistRemoteMediator
@@ -40,6 +42,10 @@ import kotlinx.coroutines.CoroutineScope
 interface DataModule : DataModuleSyntax {
 
   val applicationContext: Context
+
+  val sharedPreferences: SharedPreferences
+
+  val preferencesDataSource: PreferencesDataSource
 
   val youtubeDataSource: YoutubeDataSource
 

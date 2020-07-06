@@ -24,27 +24,27 @@ import com.github.hadilq.youtubeapp.login.util.exec
 import com.google.android.gms.common.ConnectionResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
-import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.consumeAsFlow
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class LoginViewModel : SLife() {
 
-  private val playlistPublisher = BroadcastChannel<Unit>(CONFLATED)
-  private val showGooglePlayServicesAvailabilityErrorDialogPublisher = BroadcastChannel<Int>(CONFLATED)
-  private val chooseAccountPublisher = BroadcastChannel<Unit>(CONFLATED)
-  private val noNetworkPublisher = BroadcastChannel<Unit>(CONFLATED)
+  private val playlistPublisher = Channel<Unit>(CONFLATED)
+  private val showGooglePlayServicesAvailabilityErrorDialogPublisher = Channel<Int>(CONFLATED)
+  private val chooseAccountPublisher = Channel<Unit>(CONFLATED)
+  private val noNetworkPublisher = Channel<Unit>(CONFLATED)
 
-  val navToPlaylist = playlistPublisher.asFlow()
+  val navToPlaylist = playlistPublisher.consumeAsFlow()
   val showGooglePlayServicesAvailabilityErrorDialog =
-    showGooglePlayServicesAvailabilityErrorDialogPublisher.asFlow()
-  val chooseAccount = chooseAccountPublisher.asFlow()
-  val noNetwork = noNetworkPublisher.asFlow()
+    showGooglePlayServicesAvailabilityErrorDialogPublisher.consumeAsFlow()
+  val chooseAccount = chooseAccountPublisher.consumeAsFlow()
+  val noNetwork = noNetworkPublisher.consumeAsFlow()
 
   fun LoginModule.loginPlease() = exec {
     if (!isGooglePlayServicesAvailable()) {
-      acquireGooglePlayServices();
+      acquireGooglePlayServices()
     } else if (getSelectedAccountName.run { execute() } == null) {
       chooseAccount()
     } else if (!isDeviceOnline.run { execute() }) {
@@ -54,7 +54,7 @@ class LoginViewModel : SLife() {
     }
   }.sync()
 
-  private suspend fun LoginModule.chooseAccount() {
+  private suspend fun chooseAccount() {
     chooseAccountPublisher.send(Unit)
   }
 
@@ -80,6 +80,14 @@ class LoginViewModel : SLife() {
   fun LoginModule.setSelectedAccountName(accountName: AccountName) = exec {
     setSelectedAccountName.run { execute(accountName) }
   }.sync()
+
+  fun LoginModule.getSelectedAccountName(): AccountName? {
+    var accountName: AccountName? = null
+    exec {
+      accountName = getSelectedAccountName.run { execute() }
+    }.sync()
+    return accountName
+  }
 }
 
 class LoginViewModelFactory : LifeFactory<LoginViewModel> {

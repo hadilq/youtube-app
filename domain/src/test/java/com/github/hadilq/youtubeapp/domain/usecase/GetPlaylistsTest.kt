@@ -18,7 +18,7 @@ package com.github.hadilq.youtubeapp.domain.usecase
 import androidx.paging.PagingData
 import com.github.hadilq.youtubeapp.domain.di.FakeDomainModule
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOf
@@ -33,15 +33,13 @@ internal class GetPlaylistsTest {
     val query = "anyQuery"
     val pagingData: PagingData<Playlist> = mockk()
     runBlocking {
-      with(youtubeRepository) {
-        every { startLoadingPlaylist(query) } returns flowOf(pagingData)
-        val usecase = GetPlaylists()
+      with(youtubeRepository) { coEvery { startLoadingPlaylist(query) } returns flowOf(pagingData) }
+      val usecase = GetPlaylists()
 
-        val result = usecase.run { execute(query) }
+      val result = usecase.run { execute(query) }
 
-        result.collect {
-          assertEquals(it, pagingData)
-        }
+      result.collect {
+        assertEquals(it, pagingData)
       }
     }
   }

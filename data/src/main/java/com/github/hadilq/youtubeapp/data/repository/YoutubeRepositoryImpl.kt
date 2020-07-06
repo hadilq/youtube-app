@@ -34,19 +34,23 @@ import com.github.hadilq.youtubeapp.domain.entity.PlaylistItem as PlaylistItemEn
 
 class YoutubeRepositoryImpl : YoutubeRepository {
 
-  override fun DomainModule.getSelectedAccountName(): AccountName? = with(fix()) {
-    youtubeDataSource.run { getSelectedAccountName() }
+  override suspend fun DomainModule.getSelectedAccountName(): AccountName? = with(fix()) {
+    preferencesDataSource.run { readString(PREF_ACCOUNT_NAME, null) }
+      ?: youtubeDataSource.run { getSelectedAccountName() }
   }
 
-  override fun DomainModule.setSelectedAccountName(accountName: AccountName) = with(fix()) {
+  override suspend fun DomainModule.setSelectedAccountName(accountName: AccountName) = with(fix()) {
     youtubeDataSource.run { setSelectedAccountName(accountName) }
+    preferencesDataSource.run { writeString(PREF_ACCOUNT_NAME, accountName) }
   }
 
-  override fun DomainModule.newChooseAccountIntent(): Intent = with(fix()) {
+  override suspend fun DomainModule.newChooseAccountIntent(): Intent = with(fix()) {
     youtubeDataSource.run { newChooseAccountIntent() }
   }
 
-  override fun DomainModule.startLoadingPlaylist(query: Query?): Flow<PagingData<PlaylistEntity>> = with(fix()) {
+  override suspend fun DomainModule.startLoadingPlaylist(
+    query: Query?
+  ): Flow<PagingData<PlaylistEntity>> = with(fix()) {
     val pageSize = 20
     Pager(
       config = PagingConfig(pageSize),
@@ -56,7 +60,9 @@ class YoutubeRepositoryImpl : YoutubeRepository {
     }.flow.map { data: PagingData<Playlist> -> data.map { it.map() } }
   }
 
-  override fun DomainModule.startLoadingPlaylistItem(playlist: PlaylistEntity): Flow<PagingData<PlaylistItemEntity>> =
+  override suspend fun DomainModule.startLoadingPlaylistItem(
+    playlist: PlaylistEntity
+  ): Flow<PagingData<PlaylistItemEntity>> =
     with(fix()) {
       val pageSize = 20
       Pager(
@@ -67,3 +73,5 @@ class YoutubeRepositoryImpl : YoutubeRepository {
       }.flow.map { data: PagingData<PlaylistItem> -> data.map { it.map() } }
     }
 }
+
+private const val PREF_ACCOUNT_NAME = "accountName"

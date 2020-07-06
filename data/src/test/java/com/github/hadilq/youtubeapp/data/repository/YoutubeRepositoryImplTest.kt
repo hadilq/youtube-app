@@ -3,20 +3,24 @@ package com.github.hadilq.youtubeapp.data.repository
 import com.github.hadilq.youtubeapp.data.di.FakeDomainModule
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
 import com.github.hadilq.youtubeapp.domain.entity.Thumbnail
-import io.mockk.every
-import io.mockk.verify
+import io.mockk.coEvery
+import io.mockk.coJustRun
+import io.mockk.coVerify
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Test
 import java.util.Date
 
+@OptIn(ExperimentalUnsignedTypes::class)
 @Suppress("MainFunctionReturnUnit")
 class YoutubeRepositoryImplTest {
 
   @Test
   fun `getSelectedAccountName must return AccountName of DataSource`() = with(FakeDomainModule()) {
     val anyAccountName = "AnyAccountName"
-    with(youtubeDataSource) {
-      every { getSelectedAccountName() } returns anyAccountName
+    runBlocking {
+      with(youtubeDataSource) { coEvery { getSelectedAccountName() } returns anyAccountName }
+      with(preferencesDataSource) { coEvery { readString(any(), any()) } returns null }
       val repository = YoutubeRepositoryImpl()
 
       val result = repository.run { getSelectedAccountName() }
@@ -27,8 +31,10 @@ class YoutubeRepositoryImplTest {
 
   @Test
   fun `getSelectedAccountName must return null if DataSource gives null`() = with(FakeDomainModule()) {
-    with(youtubeDataSource) {
-      every { getSelectedAccountName() } returns null
+    runBlocking {
+      with(youtubeDataSource) { coEvery { getSelectedAccountName() } returns null }
+      with(preferencesDataSource) { coEvery { readString(any(), any()) } returns null }
+
       val repository = YoutubeRepositoryImpl()
 
       val result = repository.run { getSelectedAccountName() }
@@ -40,23 +46,22 @@ class YoutubeRepositoryImplTest {
   @Test
   fun `setSelectedAccountName must set AccountName to DataSource`() = with(FakeDomainModule()) {
     val anyAccountName = "AnyAccountName"
-    with(youtubeDataSource) {
-      every { setSelectedAccountName(any()) } returns Unit
+    runBlocking {
+      with(youtubeDataSource) { coJustRun { setSelectedAccountName(any()) } }
+      with(preferencesDataSource) { coJustRun { writeString(any(), any()) } }
       val repository = YoutubeRepositoryImpl()
 
       repository.run { setSelectedAccountName(anyAccountName) }
 
-      verify {
-        setSelectedAccountName(anyAccountName)
-      }
+      with(youtubeDataSource) { coVerify { setSelectedAccountName(anyAccountName) } }
     }
   }
 
   @Test
   fun `newChooseAccountIntent must return the Intent`() = with(FakeDomainModule()) {
     val anyIntent = byteArrayOf()
-    with(youtubeDataSource) {
-      every { newChooseAccountIntent() } returns anyIntent
+    runBlocking {
+      with(youtubeDataSource) { coEvery { newChooseAccountIntent() } returns anyIntent }
       val repository = YoutubeRepositoryImpl()
 
       val result = repository.run { newChooseAccountIntent() }
@@ -68,14 +73,15 @@ class YoutubeRepositoryImplTest {
   @Test
   fun startLoadingPlaylist() = with(FakeDomainModule()) {
     val repository = YoutubeRepositoryImpl()
-    repository.run { startLoadingPlaylist() }
+    runBlocking { repository.run { startLoadingPlaylist() } }
+    Unit
   }
 
-  @Suppress("EXPERIMENTAL_UNSIGNED_LITERALS")
   @Test
   fun startLoadingPlaylistItem() = with(FakeDomainModule()) {
     val playlist = Playlist("", Date(), "", Thumbnail("", 0u, 0u), "", 0u)
     val repository = YoutubeRepositoryImpl()
-    repository.run { startLoadingPlaylistItem(playlist) }
+    runBlocking { repository.run { startLoadingPlaylistItem(playlist) } }
+    Unit
   }
 }

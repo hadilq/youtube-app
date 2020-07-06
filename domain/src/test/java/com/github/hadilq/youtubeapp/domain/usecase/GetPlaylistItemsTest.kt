@@ -22,6 +22,7 @@ import com.github.hadilq.youtubeapp.domain.di.FakeDomainModule
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
 import com.github.hadilq.youtubeapp.domain.entity.PlaylistItem
 import com.github.hadilq.youtubeapp.domain.entity.Thumbnail
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.collect
@@ -38,8 +39,7 @@ internal class GetPlaylistItemsTest {
     val playlist = Playlist("", Date(), "", Thumbnail("", 0u, 0u), "", 0u)
     val pagingData: PagingData<PlaylistItem> = mockk()
     runBlocking {
-      with(youtubeRepository) {
-        every { startLoadingPlaylistItem(playlist) } returns flowOf(pagingData)
+      with(youtubeRepository) { coEvery { startLoadingPlaylistItem(playlist) } returns flowOf(pagingData)}
         val usecase = GetPlaylistItems()
 
         val result = usecase.run { execute(playlist) }
@@ -47,7 +47,6 @@ internal class GetPlaylistItemsTest {
         result.collect {
           assertEquals(it, pagingData)
         }
-      }
     }
   }
 }
