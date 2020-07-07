@@ -26,6 +26,9 @@ import com.github.hadilq.youtubeapp.domain.di.PlaylistsModuleSyntax
 import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
 import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
 import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
+import com.google.api.client.util.ExponentialBackOff
+import com.google.api.services.youtube.YouTubeScopes
 
 class AppComponentImpl(
   private val application: AppImpl
@@ -37,6 +40,13 @@ class AppComponentImpl(
   private val appModule = object : AppModule {
 
     override val applicationContext: Context = application.applicationContext
+
+    override val googleAccountCredential: GoogleAccountCredential by lazy {
+      val credential =
+        GoogleAccountCredential.usingOAuth2(applicationContext, arrayListOf(YouTubeScopes.YOUTUBE_READONLY))
+      credential.backOff = ExponentialBackOff()
+      credential
+    }
 
     override val youtubeRepository: YoutubeRepository = YoutubeRepositoryImpl()
 

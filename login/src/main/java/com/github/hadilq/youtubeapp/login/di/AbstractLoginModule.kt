@@ -16,12 +16,8 @@
 package com.github.hadilq.youtubeapp.login.di
 
 import com.github.hadilq.youtubeapp.login.LoginViewModelFactory
-import com.github.hadilq.youtubeapp.login.util.ParcelableUtil
 
 abstract class AbstractLoginModule : LoginModule {
 
   override val loginViewModelFactory = LoginViewModelFactory()
-
-  override val parcelableUtil: ParcelableUtil
-    get() = ParcelableUtil()
 }

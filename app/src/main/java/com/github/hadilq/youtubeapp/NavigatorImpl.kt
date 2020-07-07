@@ -17,9 +17,11 @@ package com.github.hadilq.youtubeapp
 
 import android.content.Context
 import android.content.Intent
+import com.github.hadilq.youtubeapp.core.navigation.Login
 import com.github.hadilq.youtubeapp.core.navigation.Navigator
 import com.github.hadilq.youtubeapp.core.navigation.Page
 import com.github.hadilq.youtubeapp.core.navigation.Playlist
+import com.github.hadilq.youtubeapp.login.newIntentOfLoginActivity
 import com.github.hadilq.youtubeapp.playlists.PlaylistsActivity
 
 class NavigatorImpl(
@@ -27,6 +29,7 @@ class NavigatorImpl(
 ) : Navigator {
 
   override fun navigateTo(page: Page) = when (page) {
-    Playlist -> context.startActivity(Intent(context, PlaylistsActivity::class.java))
+    is Playlist -> context.startActivity(Intent(context, PlaylistsActivity::class.java))
+    is Login -> context.startActivity(newIntentOfLoginActivity(context, page.intent))
   }
 }

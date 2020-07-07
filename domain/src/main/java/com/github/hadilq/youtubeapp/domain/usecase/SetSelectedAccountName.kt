@@ -20,6 +20,6 @@ import com.github.hadilq.youtubeapp.domain.entity.AccountName
 
 class SetSelectedAccountName {
 
-  suspend fun DomainModule.execute(accountName: AccountName) =
+  suspend fun DomainModule.execute(accountName: AccountName?) =
     youtubeRepository.run { setSelectedAccountName(accountName) }
 }

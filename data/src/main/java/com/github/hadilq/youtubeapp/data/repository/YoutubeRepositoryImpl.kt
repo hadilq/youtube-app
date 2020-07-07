@@ -22,24 +22,45 @@ import com.github.hadilq.youtubeapp.data.database.entity.Playlist
 import com.github.hadilq.youtubeapp.data.database.entity.PlaylistItem
 import com.github.hadilq.youtubeapp.data.database.map
 import com.github.hadilq.youtubeapp.data.di.fix
+import com.github.hadilq.youtubeapp.domain.di.DataModuleSyntax
 import com.github.hadilq.youtubeapp.domain.di.DomainModule
 import com.github.hadilq.youtubeapp.domain.entity.AccountName
+import com.github.hadilq.youtubeapp.domain.entity.Either
+import com.github.hadilq.youtubeapp.domain.entity.Error
+import com.github.hadilq.youtubeapp.domain.entity.GoogleAuthIOError
+import com.github.hadilq.youtubeapp.domain.entity.GooglePlayServicesAvailabilityError
 import com.github.hadilq.youtubeapp.domain.entity.Intent
+import com.github.hadilq.youtubeapp.domain.entity.Left
 import com.github.hadilq.youtubeapp.domain.entity.Query
+import com.github.hadilq.youtubeapp.domain.entity.Right
+import com.github.hadilq.youtubeapp.domain.entity.UserRecoverableAuthIOError
 import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAuthIOException
+import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.receiveAsFlow
+import com.github.hadilq.youtubeapp.domain.entity.Channel as ChannelEntity
 import com.github.hadilq.youtubeapp.domain.entity.Playlist as PlaylistEntity
 import com.github.hadilq.youtubeapp.domain.entity.PlaylistItem as PlaylistItemEntity
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class YoutubeRepositoryImpl : YoutubeRepository {
 
+  private val errorPublisher = Channel<Error>()
+
   override suspend fun DomainModule.getSelectedAccountName(): AccountName? = with(fix()) {
-    preferencesDataSource.run { readString(PREF_ACCOUNT_NAME, null) }
-      ?: youtubeDataSource.run { getSelectedAccountName() }
+    youtubeDataSource.run { getSelectedAccountName() }
+      ?: (preferencesDataSource.run { readString(PREF_ACCOUNT_NAME, null) }
+        ?.also { youtubeDataSource.run { setSelectedAccountName(it) } })
   }
 
-  override suspend fun DomainModule.setSelectedAccountName(accountName: AccountName) = with(fix()) {
+  override suspend fun DomainModule.setSelectedAccountName(accountName: AccountName?) = with(fix()) {
     youtubeDataSource.run { setSelectedAccountName(accountName) }
     preferencesDataSource.run { writeString(PREF_ACCOUNT_NAME, accountName) }
   }
@@ -48,9 +69,23 @@ class YoutubeRepositoryImpl : YoutubeRepository {
     youtubeDataSource.run { newChooseAccountIntent() }
   }
 
+  override suspend fun DomainModule.loadChannels(): Flow<Either<List<ChannelEntity>, Error>> = with(fix()) {
+    flowOf(Left<List<ChannelEntity>, Error>(
+      youtubeDataSource.run { loadChannels() }
+    ) as Either<List<ChannelEntity>, Error>)
+      .catch { e ->
+        when (e) {
+          is GooglePlayServicesAvailabilityIOException -> emit(Right(GooglePlayServicesAvailabilityError(e, e.intent)))
+          is UserRecoverableAuthIOException -> emit(Right(UserRecoverableAuthIOError(e, e.intent)))
+          is GoogleAuthIOException -> emit(Right(GoogleAuthIOError(e)))
+        }
+      }
+  }
+
   override suspend fun DomainModule.startLoadingPlaylist(
     query: Query?
   ): Flow<PagingData<PlaylistEntity>> = with(fix()) {
+    getSelectedAccountName()
     val pageSize = 20
     Pager(
       config = PagingConfig(pageSize),
@@ -64,6 +99,7 @@ class YoutubeRepositoryImpl : YoutubeRepository {
     playlist: PlaylistEntity
   ): Flow<PagingData<PlaylistItemEntity>> =
     with(fix()) {
+      getSelectedAccountName()
       val pageSize = 20
       Pager(
         config = PagingConfig(pageSize),
@@ -72,6 +108,10 @@ class YoutubeRepositoryImpl : YoutubeRepository {
         playlistItemDao.getPlaylistItems(playlist.id)
       }.flow.map { data: PagingData<PlaylistItem> -> data.map { it.map() } }
     }
+
+  override suspend fun DomainModule.handleErrors(): Flow<Error> = errorPublisher.receiveAsFlow()
+
+  override suspend fun DataModuleSyntax.publishError(error: Error) = errorPublisher.send(error)
 }
 
 private const val PREF_ACCOUNT_NAME = "accountName"

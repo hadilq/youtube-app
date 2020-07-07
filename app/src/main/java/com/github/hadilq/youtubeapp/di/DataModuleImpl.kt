@@ -21,6 +21,7 @@ import com.github.hadilq.youtubeapp.data.di.AbstractDataModule
 import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
 import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
 import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -31,6 +32,9 @@ class DataModuleImpl(
 
   override val applicationContext: Context
     get() = appModule.applicationContext
+
+  override val googleAccountCredential: GoogleAccountCredential
+    get() = appModule.googleAccountCredential
 
   override val sharedPreferences: SharedPreferences
     get() = applicationContext.getSharedPreferences("Youtube-App", Context.MODE_PRIVATE)

@@ -19,24 +19,27 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.github.hadilq.youtubeapp.core.di.AbstractCoreModule
 import com.github.hadilq.youtubeapp.core.di.CoreModule
+import com.github.hadilq.youtubeapp.core.navigation.Navigator
 import com.github.hadilq.youtubeapp.data.di.AbstractDataModule
 import com.github.hadilq.youtubeapp.data.di.DataModule
 import com.github.hadilq.youtubeapp.domain.di.AbstractDomainModule
 import com.github.hadilq.youtubeapp.domain.di.DomainModule
-import com.github.hadilq.youtubeapp.core.navigation.Navigator
 import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
 import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
 import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
 import com.github.hadilq.youtubeapp.domain.usecase.GetPlaylistItems
 import com.github.hadilq.youtubeapp.domain.usecase.GetPlaylists
 import com.github.hadilq.youtubeapp.domain.usecase.GetSelectedAccountName
+import com.github.hadilq.youtubeapp.domain.usecase.HandleErrors
 import com.github.hadilq.youtubeapp.domain.usecase.IsDeviceOnline
 import com.github.hadilq.youtubeapp.domain.usecase.IsGooglePlayServicesAvailable
 import com.github.hadilq.youtubeapp.domain.usecase.IsGoogleUserResolvableError
+import com.github.hadilq.youtubeapp.domain.usecase.LoadChannels
 import com.github.hadilq.youtubeapp.domain.usecase.NewChooseAccountIntent
 import com.github.hadilq.youtubeapp.domain.usecase.SetSelectedAccountName
 import com.github.hadilq.youtubeapp.playlists.di.AbstractPlaylistsModule
 import com.github.hadilq.youtubeapp.playlists.di.PlaylistsModule
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 
 class AllNeedsOfPlaylistsModule(
   private val appModule: AppModule,
@@ -52,6 +55,9 @@ class AllNeedsOfPlaylistsModule(
 
   override val applicationContext: Context
     get() = appModule.applicationContext
+
+  override val googleAccountCredential: GoogleAccountCredential
+    get() = appModule.googleAccountCredential
 
   override val sharedPreferences: SharedPreferences
     get() = dataModule.sharedPreferences
@@ -69,12 +75,16 @@ class AllNeedsOfPlaylistsModule(
     get() = domainModule.getPlaylistItems
   override val getSelectedAccountName: GetSelectedAccountName
     get() = domainModule.getSelectedAccountName
+  override val handleErrors: HandleErrors
+    get() = domainModule.handleErrors
   override val isDeviceOnline: IsDeviceOnline
     get() = domainModule.isDeviceOnline
   override val isGooglePlayServicesAvailable: IsGooglePlayServicesAvailable
     get() = domainModule.isGooglePlayServicesAvailable
   override val isGoogleUserResolvableError: IsGoogleUserResolvableError
     get() = domainModule.isGoogleUserResolvableError
+  override val loadChannels: LoadChannels
+    get() = domainModule.loadChannels
   override val newChooseAccountIntent: NewChooseAccountIntent
     get() = domainModule.newChooseAccountIntent
   override val setSelectedAccountName: SetSelectedAccountName

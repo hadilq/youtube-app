@@ -16,6 +16,7 @@
 package com.github.hadilq.youtubeapp.playlists
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
 import com.github.hadilq.youtubeapp.playlists.di.PlaylistsModule
+import kotlinx.android.synthetic.main.playlist.view.*
 
 class PlaylistsAdapter(
   private val module: PlaylistsModule
@@ -39,10 +41,16 @@ class PlaylistsAdapter(
 }
 
 class PlaylistViewHolder(parent: ViewGroup, inflater: LayoutInflater) :
-  RecyclerView.ViewHolder(inflater.inflate(R.layout.playlist, parent)) {
+  RecyclerView.ViewHolder(inflater.inflate(R.layout.playlist, parent, false)) {
 
   fun onBind(playlist: Playlist?) {
+    playlist?.let { bind(it) } ?: run {
+      itemView.clLayout.background =
+        ColorDrawable(itemView.context.resources.getColor(R.color.design_default_color_primary_dark))
+    }
+  }
 
+  private fun bind(playlist: Playlist) {
   }
 }
 

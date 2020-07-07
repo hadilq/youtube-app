@@ -16,8 +16,12 @@
 package com.github.hadilq.youtubeapp.domain.repository
 
 import androidx.paging.PagingData
+import com.github.hadilq.youtubeapp.domain.di.DataModuleSyntax
 import com.github.hadilq.youtubeapp.domain.di.DomainModule
 import com.github.hadilq.youtubeapp.domain.entity.AccountName
+import com.github.hadilq.youtubeapp.domain.entity.Channel
+import com.github.hadilq.youtubeapp.domain.entity.Either
+import com.github.hadilq.youtubeapp.domain.entity.Error
 import com.github.hadilq.youtubeapp.domain.entity.Intent
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
 import com.github.hadilq.youtubeapp.domain.entity.PlaylistItem
@@ -28,11 +32,17 @@ interface YoutubeRepository {
 
   suspend fun DomainModule.getSelectedAccountName(): AccountName?
 
-  suspend fun DomainModule.setSelectedAccountName(accountName: AccountName)
+  suspend fun DomainModule.setSelectedAccountName(accountName: AccountName?)
 
   suspend fun DomainModule.newChooseAccountIntent(): Intent
+
+  suspend fun DomainModule.loadChannels(): Flow<Either<List<Channel>, Error>>
 
   suspend fun DomainModule.startLoadingPlaylist(query: Query? = null): Flow<PagingData<Playlist>>
 
   suspend fun DomainModule.startLoadingPlaylistItem(playlist: Playlist): Flow<PagingData<PlaylistItem>>
+
+  suspend fun DomainModule.handleErrors(): Flow<Error>
+
+  suspend fun DataModuleSyntax.publishError(error: Error)
 }

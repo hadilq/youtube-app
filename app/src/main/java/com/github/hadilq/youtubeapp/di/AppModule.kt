@@ -19,6 +19,7 @@ import android.content.Context
 import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
 import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
 import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 
 /**
  * All singletons must be define inside [AppModule]
@@ -26,6 +27,8 @@ import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
 interface AppModule {
 
   val applicationContext: Context
+
+  val googleAccountCredential: GoogleAccountCredential
 
   val youtubeRepository: YoutubeRepository
 

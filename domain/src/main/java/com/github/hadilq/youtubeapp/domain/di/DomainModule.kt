@@ -21,9 +21,11 @@ import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
 import com.github.hadilq.youtubeapp.domain.usecase.GetPlaylistItems
 import com.github.hadilq.youtubeapp.domain.usecase.GetPlaylists
 import com.github.hadilq.youtubeapp.domain.usecase.GetSelectedAccountName
+import com.github.hadilq.youtubeapp.domain.usecase.HandleErrors
 import com.github.hadilq.youtubeapp.domain.usecase.IsDeviceOnline
 import com.github.hadilq.youtubeapp.domain.usecase.IsGooglePlayServicesAvailable
 import com.github.hadilq.youtubeapp.domain.usecase.IsGoogleUserResolvableError
+import com.github.hadilq.youtubeapp.domain.usecase.LoadChannels
 import com.github.hadilq.youtubeapp.domain.usecase.NewChooseAccountIntent
 import com.github.hadilq.youtubeapp.domain.usecase.SetSelectedAccountName
 
@@ -41,11 +43,15 @@ interface DomainModule : DataModuleSyntax, LoginModuleSyntax, PlaylistsModuleSyn
 
   val getSelectedAccountName: GetSelectedAccountName
 
+  val handleErrors: HandleErrors
+
   val isDeviceOnline: IsDeviceOnline
 
   val isGooglePlayServicesAvailable: IsGooglePlayServicesAvailable
 
   val isGoogleUserResolvableError: IsGoogleUserResolvableError
+
+  val loadChannels: LoadChannels
 
   val newChooseAccountIntent: NewChooseAccountIntent
 

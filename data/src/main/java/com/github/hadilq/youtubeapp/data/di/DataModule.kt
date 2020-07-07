@@ -29,7 +29,6 @@ import com.github.hadilq.youtubeapp.data.datasource.preference.PreferencesDataSo
 import com.github.hadilq.youtubeapp.data.datasource.youtube.YoutubeDataSource
 import com.github.hadilq.youtubeapp.data.paging.PlaylistItemRemoteMediator
 import com.github.hadilq.youtubeapp.data.paging.PlaylistRemoteMediator
-import com.github.hadilq.youtubeapp.data.util.ParcelableUtil
 import com.github.hadilq.youtubeapp.domain.di.DataModuleSyntax
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
 import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
@@ -65,8 +64,6 @@ interface DataModule : DataModuleSyntax {
   val googleAccountCredential: GoogleAccountCredential
 
   val googleApiAvailability: GoogleApiAvailability
-
-  val dataParcelableUtil: ParcelableUtil
 
   val youtube: YouTube
 

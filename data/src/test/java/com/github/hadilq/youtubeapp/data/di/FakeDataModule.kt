@@ -2,6 +2,7 @@ package com.github.hadilq.youtubeapp.data.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.ConnectivityManager
 import com.github.hadilq.youtubeapp.data.database.AppDatabase
 import com.github.hadilq.youtubeapp.data.database.dao.PlaylistDao
 import com.github.hadilq.youtubeapp.data.database.dao.PlaylistItemDao
@@ -13,7 +14,6 @@ import com.github.hadilq.youtubeapp.data.datasource.preference.PreferencesDataSo
 import com.github.hadilq.youtubeapp.data.datasource.youtube.YoutubeDataSource
 import com.github.hadilq.youtubeapp.data.paging.PlaylistItemRemoteMediator
 import com.github.hadilq.youtubeapp.data.paging.PlaylistRemoteMediator
-import com.github.hadilq.youtubeapp.data.util.ParcelableUtil
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
 import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
 import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
@@ -30,6 +30,8 @@ class FakeDataModule : DataModule {
   override val applicationContext: Context = mockk()
 
   override val sharedPreferences: SharedPreferences = mockk()
+
+  override val connectivityManager: ConnectivityManager = mockk()
 
   override val preferencesDataSource: PreferencesDataSource = mockk()
 
@@ -48,8 +50,6 @@ class FakeDataModule : DataModule {
   override val googleAccountCredential: GoogleAccountCredential = mockk()
 
   override val googleApiAvailability: GoogleApiAvailability = mockk()
-
-  override val dataParcelableUtil: ParcelableUtil = mockk()
 
   override val youtube: YouTube = mockk()
 

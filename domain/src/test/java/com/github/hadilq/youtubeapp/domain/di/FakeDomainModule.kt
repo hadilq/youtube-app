@@ -21,9 +21,11 @@ import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
 import com.github.hadilq.youtubeapp.domain.usecase.GetPlaylistItems
 import com.github.hadilq.youtubeapp.domain.usecase.GetPlaylists
 import com.github.hadilq.youtubeapp.domain.usecase.GetSelectedAccountName
+import com.github.hadilq.youtubeapp.domain.usecase.HandleErrors
 import com.github.hadilq.youtubeapp.domain.usecase.IsDeviceOnline
 import com.github.hadilq.youtubeapp.domain.usecase.IsGooglePlayServicesAvailable
 import com.github.hadilq.youtubeapp.domain.usecase.IsGoogleUserResolvableError
+import com.github.hadilq.youtubeapp.domain.usecase.LoadChannels
 import com.github.hadilq.youtubeapp.domain.usecase.NewChooseAccountIntent
 import com.github.hadilq.youtubeapp.domain.usecase.SetSelectedAccountName
 import io.mockk.mockk
@@ -42,11 +44,15 @@ class FakeDomainModule : DomainModule {
 
   override val getSelectedAccountName: GetSelectedAccountName = mockk()
 
+  override val handleErrors: HandleErrors = mockk()
+
   override val isDeviceOnline: IsDeviceOnline = mockk()
 
   override val isGooglePlayServicesAvailable: IsGooglePlayServicesAvailable = mockk()
 
   override val isGoogleUserResolvableError: IsGoogleUserResolvableError = mockk()
+
+  override val loadChannels: LoadChannels = mockk()
 
   override val newChooseAccountIntent: NewChooseAccountIntent = mockk()
 

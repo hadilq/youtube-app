@@ -18,9 +18,11 @@ package com.github.hadilq.youtubeapp.domain.di
 import com.github.hadilq.youtubeapp.domain.usecase.GetPlaylistItems
 import com.github.hadilq.youtubeapp.domain.usecase.GetPlaylists
 import com.github.hadilq.youtubeapp.domain.usecase.GetSelectedAccountName
+import com.github.hadilq.youtubeapp.domain.usecase.HandleErrors
 import com.github.hadilq.youtubeapp.domain.usecase.IsDeviceOnline
 import com.github.hadilq.youtubeapp.domain.usecase.IsGooglePlayServicesAvailable
 import com.github.hadilq.youtubeapp.domain.usecase.IsGoogleUserResolvableError
+import com.github.hadilq.youtubeapp.domain.usecase.LoadChannels
 import com.github.hadilq.youtubeapp.domain.usecase.NewChooseAccountIntent
 import com.github.hadilq.youtubeapp.domain.usecase.SetSelectedAccountName
 
@@ -35,6 +37,9 @@ abstract class AbstractDomainModule : DomainModule {
   override val getSelectedAccountName: GetSelectedAccountName
     get() = GetSelectedAccountName()
 
+  override val handleErrors: HandleErrors
+    get() = HandleErrors()
+
   override val isDeviceOnline: IsDeviceOnline
     get() = IsDeviceOnline()
 
@@ -43,6 +48,9 @@ abstract class AbstractDomainModule : DomainModule {
 
   override val isGoogleUserResolvableError: IsGoogleUserResolvableError
     get() = IsGoogleUserResolvableError()
+
+  override val loadChannels: LoadChannels
+    get() = LoadChannels()
 
   override val newChooseAccountIntent: NewChooseAccountIntent
     get() = NewChooseAccountIntent()

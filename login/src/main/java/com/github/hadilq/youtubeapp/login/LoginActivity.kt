@@ -19,6 +19,7 @@ import android.Manifest
 import android.accounts.AccountManager
 import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -50,13 +51,19 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     with(viewModel) {
       navToPlaylist.observe()() { navigateToPlaylist() }
       showGooglePlayServicesAvailabilityErrorDialog.observe()() { showGooglePlayServicesAvailabilityErrorDialog(it) }
-      chooseAccount.observe()() { chooseAccount(module.parcelableUtil.unmarshall(it.first, Intent.CREATOR), it.second) }
+      chooseAccount.observe()() { chooseAccount(it.first as Intent, it.second) }
       noNetwork.observe()() { noNetworkError() }
+      generalError.observe()() { generalError() }
+      launchIntent.observe()() { launchIntent(it as Intent) }
     }
 
     setupListeners()
 
-    getResultsFromApi()
+    if (intent.hasExtra(BUNDLE_KEY_INTENT)) {
+      intent.getParcelableExtra<Intent>(BUNDLE_KEY_INTENT)?.let(::launchIntent) ?: getResultsFromApi()
+    } else {
+      getResultsFromApi()
+    }
   }
 
   override fun onActivityResult(
@@ -76,7 +83,6 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)
         if (accountName != null) {
           setSelectedAccountName(accountName)
-          getResultsFromApi()
         }
       }
       REQUEST_AUTHORIZATION -> if (resultCode == Activity.RESULT_OK) {
@@ -103,12 +109,17 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
   private fun noNetworkError() {
   }
 
+  private fun generalError() {
+  }
+
   private fun noGooglePlayService() {
   }
 
   private fun navigateToPlaylist() {
-    module.navigator(this).navigateTo(Playlist)
-    finish()
+    if (!isFinishing) {
+      module.navigator(this).navigateTo(Playlist)
+      finish()
+    }
   }
 
   private fun showGooglePlayServicesAvailabilityErrorDialog(connectionStatusCode: Int) {
@@ -156,11 +167,22 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     module.run { viewModel.run { loginPlease() } }
   }
 
+  private fun launchIntent(intent: Intent) {
+    startActivityForResult(intent, REQUEST_AUTHORIZATION)
+  }
+
   private fun setSelectedAccountName(accountName: AccountName) {
     module.run { viewModel.run { setSelectedAccountName(accountName) } }
   }
 }
 
+fun newIntentOfLoginActivity(context: Context, intent: Intent?): Intent {
+  val i = Intent(context, LoginActivity::class.java)
+  i.putExtra(BUNDLE_KEY_INTENT, intent)
+  return i
+}
+
+private const val BUNDLE_KEY_INTENT = "BUNDLE_KEY_INTENT"
 private const val REQUEST_ACCOUNT_PICKER = 1000
 private const val REQUEST_AUTHORIZATION = 1001
 private const val REQUEST_GOOGLE_PLAY_SERVICES = 1002

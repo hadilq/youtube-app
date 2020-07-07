@@ -30,7 +30,8 @@ val versionJunit: String by project
 val versionAndroidxTestExt: String by project
 val versionAndroidxTestEspresso: String by project
 val versionCoroutines: String by project
-val versionNavigation: String by project
+val versionComGoogleApiClient: String by project
+val versionComGoogleApis: String by project
 
 android {
   compileSdkVersion(versionCompileSdk.toInt())
@@ -66,6 +67,12 @@ dependencies {
   implementation("com.google.android.material:material:$versionComGoogleAndroidMaterial")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$versionCoroutines")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${versionCoroutines}")
+  implementation("com.google.api-client:google-api-client-android:$versionComGoogleApiClient") {
+    exclude(group = "org.apache.httpcomponents")
+  }
+  implementation("com.google.apis:google-api-services-youtube:$versionComGoogleApis") {
+    exclude(group = "org.apache.httpcomponents")
+  }
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:$versionJunit")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$versionJunit")

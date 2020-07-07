@@ -17,6 +17,7 @@ package com.github.hadilq.youtubeapp.data.datasource.youtube
 
 import com.github.hadilq.youtubeapp.data.di.DataModule
 import com.github.hadilq.youtubeapp.domain.entity.AccountName
+import com.github.hadilq.youtubeapp.domain.entity.Channel
 import com.github.hadilq.youtubeapp.domain.entity.Intent
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
 import com.github.hadilq.youtubeapp.domain.entity.PlaylistItems
@@ -27,9 +28,11 @@ interface YoutubeDataSource {
 
   suspend fun DataModule.getSelectedAccountName(): AccountName?
 
-  suspend fun DataModule.setSelectedAccountName(accountName: AccountName)
+  suspend fun DataModule.setSelectedAccountName(accountName: AccountName?)
 
   suspend fun DataModule.newChooseAccountIntent(): Intent
+
+  suspend fun DataModule.loadChannels(): List<Channel>
 
   suspend fun DataModule.playLists(
     query: Query? = null,

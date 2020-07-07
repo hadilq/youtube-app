@@ -15,51 +15,56 @@
  */
 package com.github.hadilq.youtubeapp.data.datasource.youtube
 
+import com.github.hadilq.youtubeapp.domain.entity.Channel
+import com.github.hadilq.youtubeapp.domain.entity.PageInfo
+import com.github.hadilq.youtubeapp.domain.entity.Playlist
+import com.github.hadilq.youtubeapp.domain.entity.PlaylistItem
 import com.github.hadilq.youtubeapp.domain.entity.PlaylistItems
 import com.github.hadilq.youtubeapp.domain.entity.PlaylistList
-import com.google.api.services.youtube.model.PageInfo
-import com.google.api.services.youtube.model.Playlist
-import com.google.api.services.youtube.model.PlaylistItem
+import com.github.hadilq.youtubeapp.domain.entity.Thumbnail
+import com.google.api.services.youtube.model.ChannelListResponse
 import com.google.api.services.youtube.model.PlaylistItemListResponse
 import com.google.api.services.youtube.model.PlaylistListResponse
 import com.google.api.services.youtube.model.SearchListResponse
 import com.google.api.services.youtube.model.SearchResult
-import com.google.api.services.youtube.model.Thumbnail
 import com.google.api.services.youtube.model.VideoListResponse
 import java.util.Date
+import com.google.api.services.youtube.model.Channel as ApiChannel
+import com.google.api.services.youtube.model.PageInfo as ApiPageInfo
+import com.google.api.services.youtube.model.Playlist as ApiPlaylist
+import com.google.api.services.youtube.model.PlaylistItem as ApiPlaylistItem
+import com.google.api.services.youtube.model.Thumbnail as ApiThumbnail
 
 fun PlaylistListResponse.map(): PlaylistList = PlaylistList(
   nextPageToken = nextPageToken,
   pageInfo = pageInfo.map(),
-  items = items.map(Playlist::map)
+  items = items.map(ApiPlaylist::map)
 )
 
-private fun PageInfo.map() = com.github.hadilq.youtubeapp.domain.entity.PageInfo(
+private fun ApiPageInfo.map() = PageInfo(
   totalResults = totalResults,
   resultsPerPage = resultsPerPage
 )
 
 @OptIn(ExperimentalUnsignedTypes::class)
-private fun Playlist.map(): com.github.hadilq.youtubeapp.domain.entity.Playlist =
-  com.github.hadilq.youtubeapp.domain.entity.Playlist(
-    id = id,
-    publishedAt = Date(snippet.publishedAt.value),
-    title = snippet.title,
-    thumbnail = snippet.thumbnails.medium.map(),
-    channelTitle = snippet.channelTitle,
-    numberOfVideos = contentDetails.itemCount.toUInt()
-  )
+private fun ApiPlaylist.map(): Playlist = Playlist(
+  id = id,
+  publishedAt = Date(snippet.publishedAt.value),
+  title = snippet.title,
+  thumbnail = snippet.thumbnails.medium.map(),
+  channelTitle = snippet.channelTitle,
+  numberOfVideos = contentDetails.itemCount.toUInt()
+)
 
 @OptIn(ExperimentalUnsignedTypes::class)
-private fun Thumbnail.map(): com.github.hadilq.youtubeapp.domain.entity.Thumbnail =
-  com.github.hadilq.youtubeapp.domain.entity.Thumbnail(
-    url = url,
-    width = width.toUInt(),
-    height = height.toUInt()
-  )
+private fun ApiThumbnail.map(): Thumbnail = Thumbnail(
+  url = url,
+  width = width.toUInt(),
+  height = height.toUInt()
+)
 
 fun PlaylistItemListResponse.map(
-  playList: com.github.hadilq.youtubeapp.domain.entity.Playlist,
+  playList: Playlist,
   videoDetails: List<VideoDetail>
 ): PlaylistItems =
   PlaylistItems(
@@ -70,15 +75,14 @@ fun PlaylistItemListResponse.map(
     items = items.zip(videoDetails).map { (playlistItem, detail) -> playlistItem.map(detail) }
   )
 
-private fun PlaylistItem.map(
+private fun ApiPlaylistItem.map(
   videoDetails: VideoDetail
-): com.github.hadilq.youtubeapp.domain.entity.PlaylistItem =
-  com.github.hadilq.youtubeapp.domain.entity.PlaylistItem(
-    title = snippet.title,
-    thumbnail = snippet.thumbnails.medium.map(),
-    author = videoDetails.author,
-    duration = videoDetails.duration
-  )
+): PlaylistItem = PlaylistItem(
+  title = snippet.title,
+  thumbnail = snippet.thumbnails.medium.map(),
+  author = videoDetails.author,
+  duration = videoDetails.duration
+)
 
 fun VideoListResponse.map(): VideoDetail {
   val item = items[0]
@@ -93,19 +97,25 @@ data class VideoDetail(
   val duration: String
 )
 
-fun SearchListResponse.map() :PlaylistList= PlaylistList(
+fun SearchListResponse.map(): PlaylistList = PlaylistList(
   nextPageToken = nextPageToken,
   pageInfo = pageInfo.map(),
   items = items.map(SearchResult::map)
 )
 
 @OptIn(ExperimentalUnsignedTypes::class)
-private fun SearchResult.map(): com.github.hadilq.youtubeapp.domain.entity.Playlist =
-  com.github.hadilq.youtubeapp.domain.entity.Playlist(
-    id = id.playlistId,
-    publishedAt = Date(snippet.publishedAt.value),
-    title = snippet.title,
-    thumbnail = snippet.thumbnails.medium.map(),
-    channelTitle = snippet.channelTitle,
-    numberOfVideos = null
-  )
+private fun SearchResult.map(): Playlist = Playlist(
+  id = id.playlistId,
+  publishedAt = Date(snippet.publishedAt.value),
+  title = snippet.title,
+  thumbnail = snippet.thumbnails.medium.map(),
+  channelTitle = snippet.channelTitle,
+  numberOfVideos = null
+)
+
+fun ChannelListResponse.map(): Sequence<Channel> = items?.asSequence()?.map(ApiChannel::map) ?: emptySequence()
+
+fun ApiChannel.map(): Channel = Channel(
+  id = id,
+  title = snippet.title
+)

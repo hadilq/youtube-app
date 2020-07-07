@@ -1,4 +1,3 @@
 package com.github.hadilq.youtubeapp.core.di
 
-abstract class AbstractCoreModule : CoreModule {
-}
+abstract class AbstractCoreModule : CoreModule

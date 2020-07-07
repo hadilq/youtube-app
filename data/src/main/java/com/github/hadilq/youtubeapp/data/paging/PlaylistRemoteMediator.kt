@@ -24,7 +24,14 @@ import com.github.hadilq.youtubeapp.data.database.entity.Playlist
 import com.github.hadilq.youtubeapp.data.database.entity.PlaylistPageToken
 import com.github.hadilq.youtubeapp.data.database.map
 import com.github.hadilq.youtubeapp.data.di.DataModule
+import com.github.hadilq.youtubeapp.domain.entity.Error
+import com.github.hadilq.youtubeapp.domain.entity.GoogleAuthIOError
+import com.github.hadilq.youtubeapp.domain.entity.GooglePlayServicesAvailabilityError
 import com.github.hadilq.youtubeapp.domain.entity.PlaylistList
+import com.github.hadilq.youtubeapp.domain.entity.UserRecoverableAuthIOError
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAuthIOException
+import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException
+import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 
 @OptIn(ExperimentalPagingApi::class)
 class PlaylistRemoteMediator(
@@ -70,8 +77,19 @@ class PlaylistRemoteMediator(
       }
 
       MediatorResult.Success(endOfPaginationReached = response.nextPageToken == null)
+    } catch (e: GooglePlayServicesAvailabilityIOException) {
+      handleException(e, GooglePlayServicesAvailabilityError(e, e.intent))
+    } catch (e: UserRecoverableAuthIOException) {
+      handleException(e, UserRecoverableAuthIOError(e, e.intent))
+    } catch (e: GoogleAuthIOException) {
+      handleException(e, GoogleAuthIOError(e))
     } catch (e: Throwable) {
       MediatorResult.Error(e)
     }
+  }
+
+  private suspend fun DataModule.handleException(t: Throwable, e: Error): MediatorResult.Error {
+    youtubeRepository.run { publishError(e) }
+    return MediatorResult.Error(t)
   }
 }

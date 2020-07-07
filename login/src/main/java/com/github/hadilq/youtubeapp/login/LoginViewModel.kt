@@ -17,15 +17,21 @@ package com.github.hadilq.youtubeapp.login
 
 import com.github.hadilq.androidlifecyclehandler.LifeFactory
 import com.github.hadilq.androidlifecyclehandler.SLife
+import com.github.hadilq.coroutinelifecyclehandler.toLife
 import com.github.hadilq.youtubeapp.core.util.execute
 import com.github.hadilq.youtubeapp.domain.entity.AccountName
+import com.github.hadilq.youtubeapp.domain.entity.GooglePlayServicesAvailabilityError
 import com.github.hadilq.youtubeapp.domain.entity.Intent
+import com.github.hadilq.youtubeapp.domain.entity.Left
+import com.github.hadilq.youtubeapp.domain.entity.Right
+import com.github.hadilq.youtubeapp.domain.entity.UserRecoverableAuthIOError
 import com.github.hadilq.youtubeapp.login.di.LoginModule
 import com.google.android.gms.common.ConnectionResult
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
@@ -35,12 +41,16 @@ class LoginViewModel : SLife() {
   private val showGooglePlayServicesAvailabilityErrorDialogPublisher = Channel<Int>(CONFLATED)
   private val chooseAccountPublisher = Channel<Pair<Intent, AccountName?>>(CONFLATED)
   private val noNetworkPublisher = Channel<Unit>(CONFLATED)
+  private val generalErrorPublisher = Channel<Unit>(CONFLATED)
+  private val launchIntentPublisher = Channel<Intent>(CONFLATED)
 
   val navToPlaylist = playlistPublisher.receiveAsFlow()
   val showGooglePlayServicesAvailabilityErrorDialog =
     showGooglePlayServicesAvailabilityErrorDialogPublisher.receiveAsFlow()
   val chooseAccount = chooseAccountPublisher.receiveAsFlow()
   val noNetwork = noNetworkPublisher.receiveAsFlow()
+  val generalError = generalErrorPublisher.receiveAsFlow()
+  val launchIntent = launchIntentPublisher.receiveAsFlow()
 
   fun LoginModule.loginPlease() = execute {
     if (!isGooglePlayServicesAvailable()) {
@@ -50,7 +60,21 @@ class LoginViewModel : SLife() {
     } else if (!isDeviceOnline.run { execute() }) {
       noNetworkPublisher.send(Unit)
     } else {
-      playlistPublisher.send(Unit)
+      loadChannels.run { execute() }.onEach {
+        when (it) {
+          is Left -> {
+            if (it.left.isEmpty()) {
+              generalErrorPublisher.send(Unit)
+            } else {
+              playlistPublisher.send(Unit)}
+            }
+          is Right -> when (it.right) {
+            is UserRecoverableAuthIOError -> launchIntentPublisher.send(it.right)
+            is GooglePlayServicesAvailabilityError -> launchIntentPublisher.send(it.right)
+            else -> generalErrorPublisher.send(Unit)
+          }
+        }
+      }.toLife().sync()
     }
   }.sync()
 
@@ -73,6 +97,7 @@ class LoginViewModel : SLife() {
 
   fun LoginModule.setSelectedAccountName(accountName: AccountName) = execute {
     setSelectedAccountName.run { execute(accountName) }
+    loginPlease()
   }.sync()
 }
 

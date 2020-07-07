@@ -18,20 +18,40 @@ package com.github.hadilq.youtubeapp.playlists
 import androidx.paging.PagingData
 import com.github.hadilq.androidlifecyclehandler.LifeFactory
 import com.github.hadilq.androidlifecyclehandler.SLife
+import com.github.hadilq.coroutinelifecyclehandler.toLife
 import com.github.hadilq.youtubeapp.core.util.execute
+import com.github.hadilq.youtubeapp.domain.entity.Intent
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
+import com.github.hadilq.youtubeapp.domain.entity.UserRecoverableAuthIOError
 import com.github.hadilq.youtubeapp.playlists.di.PlaylistsModule
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PlaylistsViewModel : SLife() {
 
   private val playlistsPublisher = Channel<PagingData<Playlist>>(Channel.CONFLATED)
+  private val navToLoginPublisher = Channel<Intent?>(Channel.CONFLATED)
 
   val playlists = playlistsPublisher.receiveAsFlow()
+  val navToLogin = navToLoginPublisher.receiveAsFlow()
+
+  fun PlaylistsModule.startWatchingForErrors() = execute {
+    handleErrors.run { execute() }
+      .onEach {
+        when (it) {
+          is UserRecoverableAuthIOError -> navToLoginPublisher.send(it.intent)
+          else -> {
+            setSelectedAccountName.run { execute(null) }
+            navToLoginPublisher.send(null)
+          }
+        }
+      }
+      .toLife().sync()
+  }.sync()
 
   fun PlaylistsModule.startLoading() = execute {
     getPlaylists.run { execute(null) }.collect {

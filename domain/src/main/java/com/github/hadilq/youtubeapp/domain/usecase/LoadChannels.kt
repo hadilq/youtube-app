@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.domain.entity
+package com.github.hadilq.youtubeapp.domain.usecase
 
-typealias Intent = Any
+import com.github.hadilq.youtubeapp.domain.di.DomainModule
+import com.github.hadilq.youtubeapp.domain.entity.Channel
+import com.github.hadilq.youtubeapp.domain.entity.Either
+import com.github.hadilq.youtubeapp.domain.entity.Error
+import kotlinx.coroutines.flow.Flow
 
-typealias ConnectionResult = Int
+class LoadChannels {
 
-typealias AccountName = String
-
-typealias Query = String
+  suspend fun DomainModule.execute(): Flow<Either<List<Channel>, Error>> = youtubeRepository.run { loadChannels() }
+}

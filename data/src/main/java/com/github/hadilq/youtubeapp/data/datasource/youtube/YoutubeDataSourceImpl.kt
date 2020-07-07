@@ -17,6 +17,7 @@ package com.github.hadilq.youtubeapp.data.datasource.youtube
 
 import com.github.hadilq.youtubeapp.data.di.DataModule
 import com.github.hadilq.youtubeapp.domain.entity.AccountName
+import com.github.hadilq.youtubeapp.domain.entity.Channel
 import com.github.hadilq.youtubeapp.domain.entity.Intent
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
 import com.github.hadilq.youtubeapp.domain.entity.PlaylistItems
@@ -32,21 +33,29 @@ class YoutubeDataSourceImpl : YoutubeDataSource {
 
   override suspend fun DataModule.getSelectedAccountName(): AccountName? = googleAccountCredential.selectedAccountName
 
-  override suspend fun DataModule.setSelectedAccountName(accountName: AccountName) {
+  override suspend fun DataModule.setSelectedAccountName(accountName: AccountName?) {
     googleAccountCredential.selectedAccountName = accountName
   }
 
   override suspend fun DataModule.newChooseAccountIntent(): Intent =
-    dataParcelableUtil.marshall(googleAccountCredential.newChooseAccountIntent())
+    googleAccountCredential.newChooseAccountIntent()
+
+  override suspend fun DataModule.loadChannels(): List<Channel> = networkCall {
+    val list: YouTube.Channels.List = youtube.channels().list("snippet")
+    list.mine = true
+    list.execute().map().toList()
+  }
 
   override suspend fun DataModule.playLists(
     query: Query?,
     pageSize: Int,
     pageNextToken: String?
   ): PlaylistList = networkCall {
+    val yt = youtube
     query?.let { q ->
-      val list = youtube.search().list("part=snippet")
+      val list = yt.search().list("snippet,contentDetails")
       list.q = q
+      list.forMine = true
       list.type = "playlist"
       list.maxResults = pageSize.toLong()
       pageNextToken?.also { list.pageToken = it }
@@ -54,10 +63,12 @@ class YoutubeDataSourceImpl : YoutubeDataSource {
       response.items
       response.map()
     } ?: run {
-      val list: YouTube.Playlists.List = youtube.playlists().list("part=snippet")
+      val list: YouTube.Playlists.List = yt.playlists().list("snippet,contentDetails")
       list.maxResults = pageSize.toLong()
+      list.mine = true
       pageNextToken?.also { list.pageToken = it }
-      list.execute().map()
+      val execute = list.execute()
+      execute.map()
     }
   }
 
@@ -66,12 +77,13 @@ class YoutubeDataSourceImpl : YoutubeDataSource {
     pageSize: Int,
     pageNextToken: String?
   ): PlaylistItems = networkCall {
-    val list: YouTube.PlaylistItems.List = youtube.playlistItems().list("part=snippet")
+    val yt = youtube
+    val list: YouTube.PlaylistItems.List = yt.playlistItems().list("snippet")
     list.maxResults = pageSize.toLong()
     pageNextToken?.also { list.pageToken = it }
     val response: PlaylistItemListResponse = list.execute()
     val items = response.items.map {
-      val videoList = youtube.videos().list("")
+      val videoList = yt.videos().list("snippet")
       videoList.id = it.id
       val execute: VideoListResponse = networkCall { videoList.execute() }
       execute.map()

@@ -13,12 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.domain.entity
+package com.github.hadilq.youtubeapp.domain.usecase
 
-typealias Intent = Any
+import com.github.hadilq.youtubeapp.domain.di.FakeDomainModule
+import io.mockk.coJustRun
+import io.mockk.coVerify
+import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.Test
 
-typealias ConnectionResult = Int
+internal class LoadChannelsTest {
 
-typealias AccountName = String
+  @Test
+  fun execute() = with(FakeDomainModule()) {
+    runBlocking {
+      with(youtubeRepository) { coJustRun { loadChannels() } }
+      val usecase = LoadChannels()
 
-typealias Query = String
+      usecase.run { execute() }
+
+      with(youtubeRepository) { coVerify { loadChannels() } }
+    }
+  }
+}

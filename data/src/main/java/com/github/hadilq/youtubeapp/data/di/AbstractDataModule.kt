@@ -33,15 +33,11 @@ import com.github.hadilq.youtubeapp.data.datasource.youtube.YoutubeDataSource
 import com.github.hadilq.youtubeapp.data.datasource.youtube.YoutubeDataSourceImpl
 import com.github.hadilq.youtubeapp.data.paging.PlaylistItemRemoteMediator
 import com.github.hadilq.youtubeapp.data.paging.PlaylistRemoteMediator
-import com.github.hadilq.youtubeapp.data.util.ParcelableUtil
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.http.javanet.NetHttpTransport
 import com.google.api.client.json.jackson2.JacksonFactory
-import com.google.api.client.util.ExponentialBackOff
 import com.google.api.services.youtube.YouTube
-import com.google.api.services.youtube.YouTubeScopes
 
 abstract class AbstractDataModule : DataModule {
 
@@ -57,25 +53,17 @@ abstract class AbstractDataModule : DataModule {
     applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
   }
 
-  override val googleAccountCredential: GoogleAccountCredential by lazy {
-    GoogleAccountCredential.usingOAuth2(applicationContext, arrayListOf(YouTubeScopes.YOUTUBE_READONLY))
-      .setBackOff(ExponentialBackOff())
-  }
-
   override val googleApiAvailability: GoogleApiAvailability
     get() = GoogleApiAvailability.getInstance()
 
-  override val dataParcelableUtil: ParcelableUtil by lazy {
-    ParcelableUtil()
-  }
-
-  override val youtube: YouTube by lazy {
-    val transport = NetHttpTransport.Builder().build()
-    val jsonFactory = JacksonFactory.getDefaultInstance()
-    YouTube.Builder(transport, jsonFactory, googleAccountCredential)
-      .setApplicationName("Youtube App")
-      .build()
-  }
+  override val youtube: YouTube
+    get() {
+      val transport = NetHttpTransport()
+      val jsonFactory = JacksonFactory.getDefaultInstance()
+      return YouTube.Builder(transport, jsonFactory, googleAccountCredential)
+        .setApplicationName("Youtube App")
+        .build()
+    }
 
   override val db: AppDatabase by lazy {
     Room.databaseBuilder(

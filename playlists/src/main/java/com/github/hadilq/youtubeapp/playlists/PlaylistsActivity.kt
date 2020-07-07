@@ -15,11 +15,13 @@
  */
 package com.github.hadilq.youtubeapp.playlists
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.github.hadilq.androidlifecyclehandler.provideLife
 import com.github.hadilq.coroutinelifecyclehandler.observe
+import com.github.hadilq.youtubeapp.core.navigation.Login
 import com.github.hadilq.youtubeapp.domain.di.App
 import com.github.hadilq.youtubeapp.playlists.di.PlaylistsModule
 import com.github.hadilq.youtubeapp.playlists.di.fix
@@ -42,10 +44,14 @@ class PlaylistsActivity : AppCompatActivity() {
 
     with(viewModel) {
       playlists.observe()() { adapter.submitData(it) }
+      navToLogin.observe()() {
+        navigateToLogin(it?.let { intent -> module.run { intent as Intent } })
+      }
     }
 
     setupRecycler()
 
+    startWatchingForErrors()
     loadPlaylists()
   }
 
@@ -55,7 +61,16 @@ class PlaylistsActivity : AppCompatActivity() {
     list.adapter = adapter
   }
 
+  private fun startWatchingForErrors() {
+    module.run { viewModel.run { startWatchingForErrors() } }
+  }
+
   private fun loadPlaylists() {
     module.run { viewModel.run { startLoading() } }
+  }
+
+  private fun navigateToLogin(intent: Intent?) {
+    module.navigator(this).navigateTo(Login(intent))
+    finish()
   }
 }
