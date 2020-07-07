@@ -37,6 +37,9 @@ interface PlaylistPageTokenDao {
   @Delete
   suspend fun delete(playlistPageToken: PlaylistPageToken)
 
+  @Query("DELETE FROM playlist_page_token")
+  suspend fun deleteAll()
+
   @Query("DELETE FROM playlist_page_token WHERE `query` = :query")
   suspend fun deleteByQuery(query: String?)
 }

@@ -34,6 +34,7 @@ val versionComGoogleApiClient: String by project
 val versionComGoogleApis: String by project
 val versionCoroutines: String by project
 val versionPaging: String by project
+val versionCoil: String by project
 val versionRoom: String by project
 val versionMultidex: String by project
 val versionMockk: String by project
@@ -54,7 +55,14 @@ android {
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
   }
+  compileOptions {
+    sourceCompatibility(JavaVersion.VERSION_1_8)
+    targetCompatibility(JavaVersion.VERSION_1_8)
+  }
 
+  kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_1_8.toString()
+  }
   lintOptions {
     disable("TrustAllX509TrustManager")
   }
@@ -81,6 +89,7 @@ dependencies {
   kapt("androidx.room:room-compiler:$versionRoom")
   implementation("androidx.room:room-ktx:$versionRoom")
   implementation("androidx.multidex:multidex:$versionMultidex")
+  implementation("io.coil-kt:coil-base:$versionCoil")
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:$versionJunit")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$versionJunit")

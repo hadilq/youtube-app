@@ -68,8 +68,13 @@ class PlaylistRemoteMediator(
 
       db.withTransaction {
         if (loadType == LoadType.REFRESH) {
-          playlistPageTokenDao.deleteByQuery(query)
-          playlistDao.deleteByQuery(query)
+          if (query == null) {
+            playlistPageTokenDao.deleteAll()
+            playlistDao.deleteAll()
+          } else {
+            playlistPageTokenDao.deleteByQuery(query)
+            playlistDao.deleteByQuery(query)
+          }
         }
         playlistPageTokenDao.insertOrReplace(PlaylistPageToken(query = query, nextPageToken = response.nextPageToken))
 

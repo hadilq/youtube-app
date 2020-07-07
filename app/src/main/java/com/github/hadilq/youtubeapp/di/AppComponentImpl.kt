@@ -16,6 +16,8 @@
 package com.github.hadilq.youtubeapp.di
 
 import android.content.Context
+import coil.ImageLoader
+import coil.util.DebugLogger
 import com.github.hadilq.youtubeapp.AppImpl
 import com.github.hadilq.youtubeapp.data.repository.DeviceRepositoryImpl
 import com.github.hadilq.youtubeapp.data.repository.GooglePlayRepositoryImpl
@@ -53,12 +55,14 @@ class AppComponentImpl(
     override val googlePlayRepository: GooglePlayRepository = GooglePlayRepositoryImpl()
 
     override val deviceRepository: DeviceRepository = DeviceRepositoryImpl()
+
+    override val imageLoader: ImageLoader = ImageLoader.Builder(applicationContext).build()
   }
 
   override val loginModule: LoginModuleSyntax
     get() {
       val domainModule = DomainModuleImpl(appModule)
-      val coreModule = CoreModuleImpl()
+      val coreModule = CoreModuleImpl(appModule)
       return AllNeedsOfLoginModule(
         appModule = appModule,
         domainModule = domainModule,
@@ -71,7 +75,7 @@ class AppComponentImpl(
   override val playlistsModule: PlaylistsModuleSyntax
     get() {
       val domainModule = DomainModuleImpl(appModule)
-      val coreModule = CoreModuleImpl()
+      val coreModule = CoreModuleImpl(appModule)
       return AllNeedsOfPlaylistsModule(
         appModule = appModule,
         domainModule = domainModule,

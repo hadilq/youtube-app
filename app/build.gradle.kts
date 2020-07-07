@@ -32,6 +32,7 @@ val versionAndroidxTestEspresso: String by project
 val versionCoroutines: String by project
 val versionComGoogleApiClient: String by project
 val versionComGoogleApis: String by project
+val versionCoil: String by project
 
 android {
   compileSdkVersion(versionCompileSdk.toInt())
@@ -49,6 +50,13 @@ android {
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
+  }
+  compileOptions {
+    sourceCompatibility(JavaVersion.VERSION_1_8)
+    targetCompatibility(JavaVersion.VERSION_1_8)
+  }
+  kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_1_8.toString()
   }
 }
 
@@ -73,6 +81,7 @@ dependencies {
   implementation("com.google.apis:google-api-services-youtube:$versionComGoogleApis") {
     exclude(group = "org.apache.httpcomponents")
   }
+  implementation("io.coil-kt:coil-base:$versionCoil")
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:$versionJunit")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$versionJunit")

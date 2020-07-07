@@ -22,6 +22,8 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import coil.request.LoadRequest
+import coil.size.Scale
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
 import com.github.hadilq.youtubeapp.playlists.di.PlaylistsModule
 import kotlinx.android.synthetic.main.playlist.view.*
@@ -36,21 +38,30 @@ class PlaylistsAdapter(
   }
 
   override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
-    holder.onBind(getItem(position))
+    module.run { holder.run { onBind(getItem(position)) } }
   }
 }
 
 class PlaylistViewHolder(parent: ViewGroup, inflater: LayoutInflater) :
   RecyclerView.ViewHolder(inflater.inflate(R.layout.playlist, parent, false)) {
 
-  fun onBind(playlist: Playlist?) {
+  fun PlaylistsModule.onBind(playlist: Playlist?) {
     playlist?.let { bind(it) } ?: run {
       itemView.clLayout.background =
         ColorDrawable(itemView.context.resources.getColor(R.color.design_default_color_primary_dark))
     }
   }
 
-  private fun bind(playlist: Playlist) {
+  private fun PlaylistsModule.bind(playlist: Playlist) {
+    itemView.tvTitle.text = playlist.title
+    itemView.tvVideoNumber.text = "${playlist.numberOfVideos}"
+
+    val request = LoadRequest.Builder(itemView.context)
+      .data(playlist.thumbnail.url)
+      .target(itemView.ivThumbnail)
+      .error(ColorDrawable(itemView.context.resources.getColor(R.color.design_default_color_primary_dark)))
+      .build()
+    imageLoader.execute(request)
   }
 }
 

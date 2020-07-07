@@ -29,6 +29,7 @@ val versionComGoogleAndroidMaterial: String by project
 val versionCoroutineLifecycle: String by project
 val versionAndroidxConstraintLayout: String by project
 val versionPaging: String by project
+val versionCoil: String by project
 val versionJunit: String by project
 val versionAndroidxTestExt: String by project
 val versionAndroidxTestEspresso: String by project
@@ -47,6 +48,14 @@ android {
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
   }
+  compileOptions {
+    sourceCompatibility(JavaVersion.VERSION_1_8)
+    targetCompatibility(JavaVersion.VERSION_1_8)
+  }
+
+  kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_1_8.toString()
+  }
 }
 
 dependencies {
@@ -60,6 +69,7 @@ dependencies {
   implementation("com.github.hadilq:coroutinelifecyclehandler:$versionCoroutineLifecycle")
   implementation("androidx.constraintlayout:constraintlayout:$versionAndroidxConstraintLayout")
   implementation("androidx.paging:paging-runtime:$versionPaging")
+  implementation("io.coil-kt:coil-base:$versionCoil")
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:$versionJunit")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$versionJunit")

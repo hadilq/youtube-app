@@ -34,6 +34,9 @@ interface PlaylistDao {
   @Delete
   suspend fun delete(playlist: Playlist)
 
+  @Query("DELETE FROM playlist")
+  suspend fun deleteAll()
+
   @Query("DELETE FROM playlist WHERE `query` = :query")
   suspend fun deleteByQuery(query: String?)
 }

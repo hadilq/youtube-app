@@ -18,6 +18,7 @@ package com.github.hadilq.youtubeapp.data.di
 import android.content.Context
 import android.net.ConnectivityManager
 import androidx.room.Room
+import coil.ImageLoader
 import com.github.hadilq.youtubeapp.data.database.AppDatabase
 import com.github.hadilq.youtubeapp.data.database.dao.PlaylistDao
 import com.github.hadilq.youtubeapp.data.database.dao.PlaylistItemDao

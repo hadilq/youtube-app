@@ -16,6 +16,7 @@
 package com.github.hadilq.youtubeapp.di
 
 import android.content.Context
+import coil.ImageLoader
 import com.github.hadilq.youtubeapp.core.di.CoreModule
 import com.github.hadilq.youtubeapp.core.navigation.Navigator
 import com.github.hadilq.youtubeapp.domain.di.DomainModule
@@ -27,4 +28,7 @@ class PlaylistsModuleImpl(
 ) : AbstractPlaylistsModule(), DomainModule by domainModule {
 
   override fun navigator(context: Context): Navigator = coreModule.navigator(context)
+
+  override val imageLoader: ImageLoader
+    get() = coreModule.imageLoader
 }

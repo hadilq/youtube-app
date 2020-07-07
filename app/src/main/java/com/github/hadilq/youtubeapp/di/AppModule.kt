@@ -16,6 +16,7 @@
 package com.github.hadilq.youtubeapp.di
 
 import android.content.Context
+import coil.ImageLoader
 import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
 import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
 import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
@@ -35,4 +36,6 @@ interface AppModule {
   val googlePlayRepository: GooglePlayRepository
 
   val deviceRepository: DeviceRepository
+
+  val imageLoader: ImageLoader
 }

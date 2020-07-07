@@ -17,6 +17,7 @@ package com.github.hadilq.youtubeapp.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import coil.ImageLoader
 import com.github.hadilq.youtubeapp.core.di.AbstractCoreModule
 import com.github.hadilq.youtubeapp.core.di.CoreModule
 import com.github.hadilq.youtubeapp.core.navigation.Navigator
@@ -58,6 +59,9 @@ class AllNeedsOfLoginModule(
 
   override val googleAccountCredential: GoogleAccountCredential
     get() = appModule.googleAccountCredential
+
+  override val imageLoader: ImageLoader
+    get() = appModule.imageLoader
 
   override val sharedPreferences: SharedPreferences
     get() = dataModule.sharedPreferences
