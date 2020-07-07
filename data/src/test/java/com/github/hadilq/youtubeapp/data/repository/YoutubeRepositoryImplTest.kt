@@ -21,7 +21,6 @@ class YoutubeRepositoryImplTest {
     val anyAccountName = "AnyAccountName"
     runBlocking {
       with(youtubeDataSource) { coEvery { getSelectedAccountName() } returns anyAccountName }
-      with(preferencesDataSource) { coEvery { readString(any(), any()) } returns null }
       val repository = YoutubeRepositoryImpl()
 
       val result = repository.run { getSelectedAccountName() }
@@ -41,6 +40,25 @@ class YoutubeRepositoryImplTest {
       val result = repository.run { getSelectedAccountName() }
 
       assertEquals(result, null)
+    }
+  }
+
+  @Test
+  fun `getSelectedAccountName must setSelectedAccountName if preferences is not null`() = with(FakeDomainModule()) {
+    val anyAccountName = "AnyAccountName"
+    runBlocking {
+      with(youtubeDataSource) { coEvery { getSelectedAccountName() } returns null }
+      with(preferencesDataSource) { coEvery { readString(any(), any()) } returns anyAccountName }
+      with(youtubeDataSource) { coJustRun { setSelectedAccountName(anyAccountName) } }
+
+      val repository = YoutubeRepositoryImpl()
+
+      val result = repository.run { getSelectedAccountName() }
+
+      with(youtubeDataSource) { coVerify { getSelectedAccountName() } }
+      with(preferencesDataSource) { coVerify { readString(any(), any()) } }
+      with(youtubeDataSource) { coVerify { setSelectedAccountName(anyAccountName) } }
+      assertEquals(result, anyAccountName)
     }
   }
 
