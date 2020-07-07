@@ -20,6 +20,7 @@ import com.github.hadilq.androidlifecyclehandler.LifeFactory
 import com.github.hadilq.androidlifecyclehandler.SLife
 import com.github.hadilq.coroutinelifecyclehandler.toLife
 import com.github.hadilq.youtubeapp.core.util.execute
+import com.github.hadilq.youtubeapp.domain.entity.GooglePlayServicesAvailabilityError
 import com.github.hadilq.youtubeapp.domain.entity.Intent
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
 import com.github.hadilq.youtubeapp.domain.entity.UserRecoverableAuthIOError
@@ -39,11 +40,12 @@ class PlaylistsViewModel : SLife() {
   val playlists = playlistsPublisher.receiveAsFlow()
   val navToLogin = navToLoginPublisher.receiveAsFlow()
 
-  fun PlaylistsModule.startWatchingForErrors() = execute {
+  fun PlaylistsModule.startWatchingForErrors() = execute(viewModelScope) {
     handleErrors.run { execute() }
       .onEach {
         when (it) {
           is UserRecoverableAuthIOError -> navToLoginPublisher.send(it.intent)
+          is GooglePlayServicesAvailabilityError -> navToLoginPublisher.send(it.intent)
           else -> {
             setSelectedAccountName.run { execute(null) }
             navToLoginPublisher.send(null)
@@ -53,7 +55,7 @@ class PlaylistsViewModel : SLife() {
       .toLife().sync()
   }.sync()
 
-  fun PlaylistsModule.startLoading() = execute {
+  fun PlaylistsModule.startLoading() = execute(viewModelScope) {
     getPlaylists.run { execute(null) }.collect {
       playlistsPublisher.send(it)
     }

@@ -45,7 +45,7 @@ class PlaylistsActivity : AppCompatActivity() {
     with(viewModel) {
       playlists.observe()() { adapter.submitData(it) }
       navToLogin.observe()() {
-        navigateToLogin(it?.let { intent -> module.run { intent as Intent } })
+        navigateToLogin(it?.let { intent -> intent as Intent })
       }
     }
 

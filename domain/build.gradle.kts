@@ -22,6 +22,10 @@ val versionJunit: String by project
 val versionMockk: String by project
 val versionKotlinCoroutines: String by project
 
+tasks.withType<Test> {
+  useJUnitPlatform()
+}
+
 dependencies {
   implementation("org.jetbrains.kotlin:kotlin-stdlib:$versionKotlin")
   implementation("androidx.paging:paging-common:$versionPaging")

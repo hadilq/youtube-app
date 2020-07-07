@@ -1,6 +1,9 @@
-package com.github.hadilq.youtubeapp.data.di
+package com.github.hadilq.youtubeapp.playlists.di
 
-import com.github.hadilq.youtubeapp.domain.di.DomainModule
+import android.content.Context
+import coil.ImageLoader
+import com.github.hadilq.youtubeapp.core.navigation.Navigator
+import com.github.hadilq.youtubeapp.domain.repository.DeviceRepository
 import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
 import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
 import com.github.hadilq.youtubeapp.domain.usecase.GetPlaylistItems
@@ -13,15 +16,24 @@ import com.github.hadilq.youtubeapp.domain.usecase.IsGoogleUserResolvableError
 import com.github.hadilq.youtubeapp.domain.usecase.LoadChannels
 import com.github.hadilq.youtubeapp.domain.usecase.NewChooseAccountIntent
 import com.github.hadilq.youtubeapp.domain.usecase.SetSelectedAccountName
+import com.github.hadilq.youtubeapp.playlists.PlaylistViewHolderFactory
+import com.github.hadilq.youtubeapp.playlists.PlaylistsAdapter
+import com.github.hadilq.youtubeapp.playlists.PlaylistsViewModelFactory
 import io.mockk.mockk
+import kotlinx.coroutines.CoroutineScope
 
-class FakeDomainModule(
-  private val dataModule: DataModule = FakeDataModule()
-) : DomainModule, DataModule by dataModule {
+class FakePlaylistsModule(private val scope: CoroutineScope) : PlaylistsModule {
+  override val playlistsViewModelFactory: PlaylistsViewModelFactory = mockk()
+
+  override val playlistViewHolderFactory: PlaylistViewHolderFactory = mockk()
+
+  override val playlistsAdapter: PlaylistsAdapter = mockk()
 
   override val youtubeRepository: YoutubeRepository = mockk()
 
   override val googlePlayRepository: GooglePlayRepository = mockk()
+
+  override val deviceRepository: DeviceRepository = mockk()
 
   override val getPlaylists: GetPlaylists = mockk()
 
@@ -42,4 +54,10 @@ class FakeDomainModule(
   override val newChooseAccountIntent: NewChooseAccountIntent = mockk()
 
   override val setSelectedAccountName: SetSelectedAccountName = mockk()
+
+  override fun navigator(context: Context): Navigator = mockk()
+
+  override val imageLoader: ImageLoader = mockk()
+
+  override val viewModelScope: CoroutineScope = scope
 }

@@ -16,22 +16,56 @@
 package com.github.hadilq.youtubeapp.domain.usecase
 
 import com.github.hadilq.youtubeapp.domain.di.FakeDomainModule
-import io.mockk.coJustRun
+import com.github.hadilq.youtubeapp.domain.entity.Channel
+import com.github.hadilq.youtubeapp.domain.entity.Error
+import com.github.hadilq.youtubeapp.domain.entity.Intent
+import com.github.hadilq.youtubeapp.domain.entity.Left
+import com.github.hadilq.youtubeapp.domain.entity.Right
+import com.github.hadilq.youtubeapp.domain.entity.UserRecoverableAuthIOError
+import io.mockk.coEvery
 import io.mockk.coVerify
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 internal class LoadChannelsTest {
 
   @Test
-  fun execute() = with(FakeDomainModule()) {
+  fun `execute left`() = with(FakeDomainModule()) {
+    val channel = Channel("", "")
     runBlocking {
-      with(youtubeRepository) { coJustRun { loadChannels() } }
+      with(youtubeRepository) { coEvery { loadChannels() } returns flowOf(Left(listOf(channel))) }
       val usecase = LoadChannels()
 
-      usecase.run { execute() }
+      val result = usecase.run { execute() }
 
       with(youtubeRepository) { coVerify { loadChannels() } }
+      result.collect {
+        assert(it is Left) { "it is not Left" }
+        assertEquals((it as Left<List<Channel>, Error>).left, listOf(channel))
+      }
+    }
+  }
+
+  @Test
+  fun `execute right`() = with(FakeDomainModule()) {
+    runBlocking {
+      val error = UserRecoverableAuthIOError(RuntimeException(), Intent())
+      with(youtubeRepository) {
+        coEvery { loadChannels() } returns
+          flowOf(Right<List<Channel>, Error>(error))
+      }
+      val usecase = LoadChannels()
+
+      val result = usecase.run { execute() }
+
+      with(youtubeRepository) { coVerify { loadChannels() } }
+      result.collect {
+        assert(it is Right) { "it is not Right" }
+        assertEquals((it as Right<List<Channel>, Error>).right, error)
+      }
     }
   }
 }

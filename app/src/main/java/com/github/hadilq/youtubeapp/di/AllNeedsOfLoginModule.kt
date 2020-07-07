@@ -41,6 +41,7 @@ import com.github.hadilq.youtubeapp.domain.usecase.SetSelectedAccountName
 import com.github.hadilq.youtubeapp.login.di.AbstractLoginModule
 import com.github.hadilq.youtubeapp.login.di.LoginModule
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
+import kotlinx.coroutines.CoroutineScope
 
 class AllNeedsOfLoginModule(
   private val appModule: AppModule,
@@ -62,6 +63,9 @@ class AllNeedsOfLoginModule(
 
   override val imageLoader: ImageLoader
     get() = appModule.imageLoader
+
+  override val viewModelScope: CoroutineScope
+    get() = coreModule.viewModelScope
 
   override val sharedPreferences: SharedPreferences
     get() = dataModule.sharedPreferences

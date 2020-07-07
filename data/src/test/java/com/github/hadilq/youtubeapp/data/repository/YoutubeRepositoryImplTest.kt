@@ -1,6 +1,7 @@
 package com.github.hadilq.youtubeapp.data.repository
 
 import com.github.hadilq.youtubeapp.data.di.FakeDomainModule
+import com.github.hadilq.youtubeapp.domain.entity.AccountName
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
 import com.github.hadilq.youtubeapp.domain.entity.Thumbnail
 import io.mockk.coEvery
@@ -72,16 +73,24 @@ class YoutubeRepositoryImplTest {
 
   @Test
   fun startLoadingPlaylist() = with(FakeDomainModule()) {
+    val anyAccountName: AccountName = "AnyAccountName"
     val repository = YoutubeRepositoryImpl()
-    runBlocking { repository.run { startLoadingPlaylist() } }
+    runBlocking {
+      with(youtubeDataSource) { coEvery { getSelectedAccountName() } returns anyAccountName }
+      repository.run { startLoadingPlaylist() }
+    }
     Unit
   }
 
   @Test
   fun startLoadingPlaylistItem() = with(FakeDomainModule()) {
+    val anyAccountName: AccountName = "AnyAccountName"
     val playlist = Playlist("", Date(), "", Thumbnail("", 0u, 0u), "", 0u)
     val repository = YoutubeRepositoryImpl()
-    runBlocking { repository.run { startLoadingPlaylistItem(playlist) } }
+    runBlocking {
+      with(youtubeDataSource) { coEvery { getSelectedAccountName() } returns anyAccountName }
+      repository.run { startLoadingPlaylistItem(playlist) }
+    }
     Unit
   }
 }

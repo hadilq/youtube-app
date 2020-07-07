@@ -41,6 +41,7 @@ import com.github.hadilq.youtubeapp.domain.usecase.SetSelectedAccountName
 import com.github.hadilq.youtubeapp.playlists.di.AbstractPlaylistsModule
 import com.github.hadilq.youtubeapp.playlists.di.PlaylistsModule
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
+import kotlinx.coroutines.CoroutineScope
 
 class AllNeedsOfPlaylistsModule(
   private val appModule: AppModule,
@@ -62,6 +63,9 @@ class AllNeedsOfPlaylistsModule(
 
   override val imageLoader: ImageLoader
     get() = appModule.imageLoader
+
+  override val viewModelScope: CoroutineScope
+    get() = coreModule.viewModelScope
 
   override val sharedPreferences: SharedPreferences
     get() = dataModule.sharedPreferences

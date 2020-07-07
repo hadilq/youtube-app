@@ -17,7 +17,6 @@ package com.github.hadilq.youtubeapp.di
 
 import android.content.Context
 import coil.ImageLoader
-import coil.util.DebugLogger
 import com.github.hadilq.youtubeapp.AppImpl
 import com.github.hadilq.youtubeapp.data.repository.DeviceRepositoryImpl
 import com.github.hadilq.youtubeapp.data.repository.GooglePlayRepositoryImpl

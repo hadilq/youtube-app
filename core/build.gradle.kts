@@ -18,6 +18,7 @@ plugins {
   kotlin("android")
   kotlin("android.extensions")
   kotlin("kapt")
+  id("de.mannodermaus.android-junit5")
 }
 val versionKotlin: String by project
 val versionCompileSdk: String by project

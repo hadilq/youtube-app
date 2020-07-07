@@ -21,6 +21,7 @@ import com.github.hadilq.youtubeapp.core.di.CoreModule
 import com.github.hadilq.youtubeapp.core.navigation.Navigator
 import com.github.hadilq.youtubeapp.domain.di.DomainModule
 import com.github.hadilq.youtubeapp.playlists.di.AbstractPlaylistsModule
+import kotlinx.coroutines.CoroutineScope
 
 class PlaylistsModuleImpl(
   private val domainModule: DomainModule,
@@ -31,4 +32,7 @@ class PlaylistsModuleImpl(
 
   override val imageLoader: ImageLoader
     get() = coreModule.imageLoader
+
+  override val viewModelScope: CoroutineScope
+    get() = coreModule.viewModelScope
 }

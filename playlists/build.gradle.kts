@@ -18,6 +18,7 @@ plugins {
   kotlin("android")
   kotlin("android.extensions")
   kotlin("kapt")
+  id("de.mannodermaus.android-junit5")
 }
 val versionKotlin: String by project
 val versionCompileSdk: String by project
@@ -29,7 +30,9 @@ val versionComGoogleAndroidMaterial: String by project
 val versionCoroutineLifecycle: String by project
 val versionAndroidxConstraintLayout: String by project
 val versionPaging: String by project
+val versionMockk: String by project
 val versionCoil: String by project
+val versionCoroutines: String by project
 val versionJunit: String by project
 val versionAndroidxTestExt: String by project
 val versionAndroidxTestEspresso: String by project
@@ -70,10 +73,14 @@ dependencies {
   implementation("androidx.constraintlayout:constraintlayout:$versionAndroidxConstraintLayout")
   implementation("androidx.paging:paging-runtime:$versionPaging")
   implementation("io.coil-kt:coil-base:$versionCoil")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$versionCoroutines")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${versionCoroutines}")
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:$versionJunit")
   testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$versionJunit")
   testImplementation("androidx.paging:paging-common:$versionPaging")
+  testImplementation("io.mockk:mockk:$versionMockk")
+  testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:$versionCoroutines")
 
   androidTestImplementation("androidx.test.ext:junit:$versionAndroidxTestExt")
   androidTestImplementation("androidx.test.espresso:espresso-core:$versionAndroidxTestEspresso")

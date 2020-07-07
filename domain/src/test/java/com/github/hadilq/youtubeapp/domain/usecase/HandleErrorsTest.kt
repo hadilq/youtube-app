@@ -29,7 +29,7 @@ internal class HandleErrorsTest {
 
   @Test
   fun execute() = with(FakeDomainModule()) {
-    val error = UserRecoverableAuthIOError(IOException())
+    val error = UserRecoverableAuthIOError(IOException(), Any())
     runBlocking {
       with(youtubeRepository) { coEvery { handleErrors() } returns flowOf(error) }
       val usecase = HandleErrors()

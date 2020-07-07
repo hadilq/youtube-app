@@ -18,6 +18,7 @@ plugins {
   kotlin("android")
   kotlin("android.extensions")
   kotlin("kapt")
+  id("de.mannodermaus.android-junit5")
 }
 val versionKotlin: String by project
 val versionCompileSdk: String by project
@@ -89,6 +90,7 @@ dependencies {
   kapt("androidx.room:room-compiler:$versionRoom")
   implementation("androidx.room:room-ktx:$versionRoom")
   implementation("androidx.multidex:multidex:$versionMultidex")
+  implementation("io.coil-kt:coil-base:$versionCoil")
   implementation("io.coil-kt:coil-base:$versionCoil")
 
   testImplementation("org.junit.jupiter:junit-jupiter-api:$versionJunit")

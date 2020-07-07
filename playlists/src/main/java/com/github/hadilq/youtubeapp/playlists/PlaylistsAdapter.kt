@@ -19,11 +19,11 @@ import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.request.LoadRequest
-import coil.size.Scale
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
 import com.github.hadilq.youtubeapp.playlists.di.PlaylistsModule
 import kotlinx.android.synthetic.main.playlist.view.*
@@ -48,7 +48,7 @@ class PlaylistViewHolder(parent: ViewGroup, inflater: LayoutInflater) :
   fun PlaylistsModule.onBind(playlist: Playlist?) {
     playlist?.let { bind(it) } ?: run {
       itemView.clLayout.background =
-        ColorDrawable(itemView.context.resources.getColor(R.color.design_default_color_primary_dark))
+        ColorDrawable(ContextCompat.getColor(itemView.context, R.color.design_default_color_primary_dark))
     }
   }
 
@@ -59,7 +59,7 @@ class PlaylistViewHolder(parent: ViewGroup, inflater: LayoutInflater) :
     val request = LoadRequest.Builder(itemView.context)
       .data(playlist.thumbnail.url)
       .target(itemView.ivThumbnail)
-      .error(ColorDrawable(itemView.context.resources.getColor(R.color.design_default_color_primary_dark)))
+      .error(ColorDrawable(ContextCompat.getColor(itemView.context, R.color.design_default_color_primary_dark)))
       .build()
     imageLoader.execute(request)
   }

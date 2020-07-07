@@ -17,8 +17,6 @@ package com.github.hadilq.youtubeapp.login
 
 import com.github.hadilq.androidlifecyclehandler.LifeFactory
 import com.github.hadilq.androidlifecyclehandler.SLife
-import com.github.hadilq.coroutinelifecyclehandler.observe
-import com.github.hadilq.coroutinelifecyclehandler.observeIn
 import com.github.hadilq.coroutinelifecyclehandler.toLife
 import com.github.hadilq.youtubeapp.core.util.execute
 import com.github.hadilq.youtubeapp.domain.entity.AccountName
@@ -29,17 +27,12 @@ import com.github.hadilq.youtubeapp.domain.entity.Right
 import com.github.hadilq.youtubeapp.domain.entity.UserRecoverableAuthIOError
 import com.github.hadilq.youtubeapp.login.di.LoginModule
 import com.google.android.gms.common.ConnectionResult
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.observeOn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.subscribeOn
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class LoginViewModel : SLife() {
@@ -61,7 +54,7 @@ class LoginViewModel : SLife() {
   val launchIntent = launchIntentPublisher.receiveAsFlow()
   val loading = loadingPublisher.receiveAsFlow()
 
-  fun LoginModule.loginPlease() = execute {
+  fun LoginModule.loginPlease() = execute(viewModelScope) {
     loadingPublisher.send(true)
     if (!isGooglePlayServicesAvailable()) {
       loadingPublisher.send(false)
@@ -73,10 +66,10 @@ class LoginViewModel : SLife() {
       loadingPublisher.send(false)
       noNetworkPublisher.send(Unit)
     } else {
-      loadChannels.run { execute() }.onEach {
-        when (it) {
+      loadChannels.run { execute() }.onEach { either ->
+        when (either) {
           is Left -> {
-            if (it.left.isEmpty()) {
+            if (either.left.isEmpty()) {
               loadingPublisher.send(false)
               generalErrorPublisher.send(Unit)
             } else {
@@ -84,12 +77,14 @@ class LoginViewModel : SLife() {
               playlistPublisher.send(Unit)
             }
           }
-          is Right -> when (it.right) {
-            is UserRecoverableAuthIOError -> launchIntentPublisher.send(it.right)
-            is GooglePlayServicesAvailabilityError -> launchIntentPublisher.send(it.right)
-            else -> {
-              loadingPublisher.send(false)
-              generalErrorPublisher.send(Unit)
+          is Right -> {
+            when (val right = either.right) {
+              is UserRecoverableAuthIOError -> launchIntentPublisher.send(right.intent)
+              is GooglePlayServicesAvailabilityError -> launchIntentPublisher.send(right.intent)
+              else -> {
+                loadingPublisher.send(false)
+                generalErrorPublisher.send(Unit)
+              }
             }
           }
         }
@@ -114,7 +109,7 @@ class LoginViewModel : SLife() {
     }
   }
 
-  fun LoginModule.setSelectedAccountName(accountName: AccountName) = execute {
+  fun LoginModule.setSelectedAccountName(accountName: AccountName) = execute(viewModelScope) {
     setSelectedAccountName.run { execute(accountName) }
     loginPlease()
   }.sync()

@@ -15,7 +15,6 @@
  */
 buildscript {
   val versionKotlin: String by project
-  val versionNavigation: String by project
   repositories {
     google()
     jcenter()
@@ -23,6 +22,7 @@ buildscript {
   dependencies {
     classpath("com.android.tools.build:gradle:4.1.0-beta02")
     classpath(kotlin("gradle-plugin", version = versionKotlin))
+    classpath ("de.mannodermaus.gradle.plugins:android-junit5:1.6.2.0")
   }
 }
 
