@@ -15,6 +15,7 @@
  */
 package com.github.hadilq.youtubeapp.core.util
 
+import android.view.View
 import com.github.hadilq.coroutinelifecyclehandler.Entry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -22,3 +23,11 @@ import kotlin.coroutines.EmptyCoroutineContext
 
 fun execute(block: suspend CoroutineScope.() -> Unit) =
   Entry { CoroutineScope(EmptyCoroutineContext).launch(block = block) }
+
+fun View.visible() {
+  visibility = View.VISIBLE
+}
+
+fun View.gone() {
+  visibility = View.GONE
+}

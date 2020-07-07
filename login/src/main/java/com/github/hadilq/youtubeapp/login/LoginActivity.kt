@@ -26,13 +26,17 @@ import androidx.appcompat.app.AppCompatActivity
 import com.github.hadilq.androidlifecyclehandler.provideLife
 import com.github.hadilq.coroutinelifecyclehandler.observe
 import com.github.hadilq.youtubeapp.core.navigation.Playlist
+import com.github.hadilq.youtubeapp.core.util.gone
+import com.github.hadilq.youtubeapp.core.util.visible
 import com.github.hadilq.youtubeapp.domain.di.App
 import com.github.hadilq.youtubeapp.domain.entity.AccountName
 import com.github.hadilq.youtubeapp.login.di.LoginModule
 import com.github.hadilq.youtubeapp.login.di.fix
 import com.google.android.gms.common.GoogleApiAvailability
 import kotlinx.android.synthetic.main.login.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.withContext
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 
@@ -55,6 +59,7 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
       noNetwork.observe()() { noNetworkError() }
       generalError.observe()() { generalError() }
       launchIntent.observe()() { launchIntent(it as Intent) }
+      loading.observe()() { withContext(Dispatchers.Main) { loading(it) } }
     }
 
     setupListeners()
@@ -169,6 +174,14 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
   private fun launchIntent(intent: Intent) {
     startActivityForResult(intent, REQUEST_AUTHORIZATION)
+  }
+
+  private fun loading(loading: Boolean) {
+    if (loading) {
+      pbLoading.visible()
+    } else {
+      pbLoading.gone()
+    }
   }
 
   private fun setSelectedAccountName(accountName: AccountName) {
