@@ -13,26 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.github.hadilq.build.plugin.*
+
 plugins {
   kotlin("jvm")
+  id("com.github.hadilq.build-plugin")
 }
-val versionKotlin: String by project
-val versionPaging: String by project
-val versionJunit: String by project
-val versionMockk: String by project
-val versionKotlinCoroutines: String by project
 
-tasks.withType<Test> {
-  useJUnitPlatform()
-}
+addJUnit()
 
 dependencies {
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:$versionKotlin")
-  implementation("androidx.paging:paging-common:$versionPaging")
+  implementation(kotlin(KOTLIN_STDLIB))
+  implementation(PAGING_COMMON)
 
-  testImplementation("org.junit.jupiter:junit-jupiter-api:$versionJunit")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$versionJunit")
-  testImplementation("io.mockk:mockk:$versionMockk")
-  testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$versionKotlinCoroutines")
-
+  testImplementation(MOCKK)
+  testImplementation(COROUTINES_TEST)
 }

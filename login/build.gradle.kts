@@ -13,45 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.github.hadilq.build.plugin.*
+
 plugins {
   id("com.android.library")
   kotlin("android")
   kotlin("android.extensions")
   kotlin("kapt")
   id("de.mannodermaus.android-junit5")
+  id("com.github.hadilq.build-plugin")
 }
-val versionKotlin: String by project
-val versionCompileSdk: String by project
-val versionMinSdk: String by project
-val versionTargetSdk: String by project
-val versionAndroidxCore: String by project
-val versionAndroidxAppcompat: String by project
-val versionComGoogleAndroidMaterial: String by project
-val versionGooglePlayServices: String by project
-val versionCoroutineLifecycle: String by project
-val versionAndroidxConstraintLayout: String by project
-val versionEasyPermission: String by project
-val versionJunit: String by project
-val versionMockk: String by project
-val versionCoil: String by project
-val versionCoroutines: String by project
-val versionAndroidxTestExt: String by project
-val versionAndroidxTestEspresso: String by project
 
 android {
-  compileSdkVersion(versionCompileSdk.toInt())
+  compileSdkVersion(VERSION_COMPILE_SDK)
   defaultConfig {
-    minSdkVersion(versionMinSdk.toInt())
-    targetSdkVersion(versionTargetSdk.toInt())
+    minSdkVersion(VERSION_MIN_SDK)
+    targetSdkVersion(VERSION_TARGET_SDK)
     consumerProguardFiles("consumer-rules.pro")
   }
 
-  buildTypes {
-    getByName("release") {
-      isMinifyEnabled = false
-      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-    }
-  }
   compileOptions {
     sourceCompatibility(JavaVersion.VERSION_1_8)
     targetCompatibility(JavaVersion.VERSION_1_8)
@@ -62,27 +42,22 @@ android {
   }
 }
 
+addAndroidBasics()
+addJUnit()
+
 dependencies {
   implementation(project(":domain"))
   implementation(project(":core"))
 
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:$versionKotlin")
-  implementation("androidx.core:core-ktx:$versionAndroidxCore")
-  implementation("androidx.appcompat:appcompat:$versionAndroidxAppcompat")
-  implementation("com.google.android.material:material:$versionComGoogleAndroidMaterial")
-  implementation("com.google.android.gms:play-services-auth:$versionGooglePlayServices")
-  implementation("com.github.hadilq:coroutinelifecyclehandler:$versionCoroutineLifecycle")
-  implementation("androidx.constraintlayout:constraintlayout:$versionAndroidxConstraintLayout")
-  implementation("pub.devrel:easypermissions:$versionEasyPermission")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$versionCoroutines")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${versionCoroutines}")
+  implementation(kotlin(KOTLIN_STDLIB))
+  implementation(GOOGLE_PLAY_SERVICES)
+  implementation(COROUTINES_LIFECYCLE)
+  implementation(CONSTRAIN_LAYOUT)
+  implementation(EASY_PERMISSION)
+  implementation(COROUTINES)
+  implementation(COROUTINES_ANDROID)
+  implementation(COIL)
 
-  testImplementation("org.junit.jupiter:junit-jupiter-api:$versionJunit")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$versionJunit")
-  testImplementation("io.mockk:mockk:$versionMockk")
-  testImplementation("io.coil-kt:coil-base:$versionCoil")
-  testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:$versionCoroutines")
-
-  androidTestImplementation("androidx.test.ext:junit:$versionAndroidxTestExt")
-  androidTestImplementation("androidx.test.espresso:espresso-core:$versionAndroidxTestEspresso")
+  testImplementation(MOCKK)
+  testImplementation (COROUTINES_TEST)
 }

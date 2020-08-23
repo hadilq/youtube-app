@@ -13,49 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.github.hadilq.build.plugin.*
+
 plugins {
   id("com.android.library")
   kotlin("android")
   kotlin("android.extensions")
   kotlin("kapt")
   id("de.mannodermaus.android-junit5")
+  id("com.github.hadilq.build-plugin")
 }
-val versionKotlin: String by project
-val versionCompileSdk: String by project
-val versionMinSdk: String by project
-val versionTargetSdk: String by project
-val versionAndroidxCore: String by project
-val versionAndroidxAppcompat: String by project
-val versionComGoogleAndroidMaterial: String by project
-val versionGooglePlayServices: String by project
-val versionJunit: String by project
-val versionAndroidxTestExt: String by project
-val versionAndroidxTestEspresso: String by project
-val versionComGoogleApiClient: String by project
-val versionComGoogleApis: String by project
-val versionCoroutines: String by project
-val versionPaging: String by project
-val versionCoil: String by project
-val versionRoom: String by project
-val versionMultidex: String by project
-val versionMockk: String by project
-val versionKotlinCoroutines: String by project
 
 android {
-  compileSdkVersion(versionCompileSdk.toInt())
+  compileSdkVersion(VERSION_COMPILE_SDK)
   defaultConfig {
-    minSdkVersion(versionMinSdk.toInt())
-    targetSdkVersion(versionTargetSdk.toInt())
+    minSdkVersion(VERSION_MIN_SDK)
+    targetSdkVersion(VERSION_TARGET_SDK)
     consumerProguardFiles("consumer-rules.pro")
     multiDexEnabled = true
   }
 
-  buildTypes {
-    getByName("release") {
-      isMinifyEnabled = false
-      proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-    }
-  }
   compileOptions {
     sourceCompatibility(JavaVersion.VERSION_1_8)
     targetCompatibility(JavaVersion.VERSION_1_8)
@@ -69,37 +46,31 @@ android {
   }
 }
 
+addAndroidBasics()
+addJUnit()
+
 dependencies {
   implementation(project(":domain"))
 
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:$versionKotlin")
-  implementation("androidx.core:core-ktx:$versionAndroidxCore")
-  implementation("androidx.appcompat:appcompat:$versionAndroidxAppcompat")
-  implementation("com.google.android.material:material:$versionComGoogleAndroidMaterial")
-  implementation("com.google.android.gms:play-services-auth:$versionGooglePlayServices")
-  implementation("com.google.api-client:google-api-client-android:$versionComGoogleApiClient") {
-    exclude(group = "org.apache.httpcomponents")
+  implementation(kotlin(KOTLIN_STDLIB))
+  implementation(GOOGLE_PLAY_SERVICES)
+  implementation(GOOGLE_PLAY_CLIENT) {
+    exclude(group = APACHE_HTTP_GROUP_ID)
   }
-  implementation("com.google.apis:google-api-services-youtube:$versionComGoogleApis") {
-    exclude(group = "org.apache.httpcomponents")
+  implementation(GOOGLE_YOUTUBE_API) {
+    exclude(group = APACHE_HTTP_GROUP_ID)
   }
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$versionCoroutines")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${versionCoroutines}")
-  implementation("androidx.paging:paging-runtime:$versionPaging")
-  implementation("androidx.room:room-runtime:$versionRoom")
-  kapt("androidx.room:room-compiler:$versionRoom")
-  implementation("androidx.room:room-ktx:$versionRoom")
-  implementation("androidx.multidex:multidex:$versionMultidex")
-  implementation("io.coil-kt:coil-base:$versionCoil")
-  implementation("io.coil-kt:coil-base:$versionCoil")
+  implementation(COROUTINES)
+  implementation(COROUTINES_ANDROID)
+  implementation(PAGING_RUNTIME)
+  implementation(ROOM_RUNTIME)
+  kapt(ROOM_COMPILER)
+  implementation(ROOM_KTX)
+  implementation(MULTIDEX)
+  implementation(COIL)
 
-  testImplementation("org.junit.jupiter:junit-jupiter-api:$versionJunit")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$versionJunit")
-  testImplementation("androidx.paging:paging-common:$versionPaging")
-  testImplementation("androidx.room:room-testing:$versionRoom")
-  testImplementation("io.mockk:mockk:$versionMockk")
-  testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$versionKotlinCoroutines")
-
-  androidTestImplementation("androidx.test.ext:junit:$versionAndroidxTestExt")
-  androidTestImplementation("androidx.test.espresso:espresso-core:$versionAndroidxTestEspresso")
+  testImplementation(PAGING_COMMON)
+  testImplementation(ROOM_TESTING)
+  testImplementation(MOCKK)
+  testImplementation(COROUTINES_TEST)
 }

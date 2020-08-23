@@ -13,37 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.github.hadilq.build.plugin.*
+
 plugins {
   id("com.android.application")
   kotlin("android")
   kotlin("android.extensions")
   kotlin("kapt")
   id("de.mannodermaus.android-junit5")
+  id("com.github.hadilq.build-plugin")
 }
-val versionKotlin: String by project
-val versionCompileSdk: String by project
-val versionMinSdk: String by project
-val versionTargetSdk: String by project
-val versionAndroidxCore: String by project
-val versionAndroidxAppcompat: String by project
-val versionComGoogleAndroidMaterial: String by project
-val versionJunit: String by project
-val versionAndroidxTestExt: String by project
-val versionAndroidxTestEspresso: String by project
-val versionCoroutines: String by project
-val versionComGoogleApiClient: String by project
-val versionComGoogleApis: String by project
-val versionCoil: String by project
 
 android {
-  compileSdkVersion(versionCompileSdk.toInt())
+  compileSdkVersion(VERSION_COMPILE_SDK)
   defaultConfig {
-    applicationId = "com.github.hadilq.youtubeapp"
-    minSdkVersion(versionMinSdk.toInt())
-    targetSdkVersion(versionTargetSdk.toInt())
+    applicationId = APPLICATION_ID
+    minSdkVersion(VERSION_MIN_SDK)
+    targetSdkVersion(VERSION_TARGET_SDK)
     multiDexEnabled = true
-    versionCode = 1
-    versionName = "1.0"
+    versionCode = VERSION_CODE
+    versionName = VERSION_NAME
   }
 
   buildTypes {
@@ -60,31 +49,25 @@ android {
     jvmTarget = JavaVersion.VERSION_1_8.toString()
   }
 }
-dependencies {
-//    kapt(Depends.lifecycleCompiler)
 
+addAndroidBasics()
+addJUnit()
+
+dependencies {
   implementation(project(":domain"))
   implementation(project(":data"))
   implementation(project(":core"))
   implementation(project(":login"))
   implementation(project(":playlists"))
 
-  implementation("org.jetbrains.kotlin:kotlin-stdlib:$versionKotlin")
-  implementation("androidx.core:core-ktx:$versionAndroidxCore")
-  implementation("androidx.appcompat:appcompat:$versionAndroidxAppcompat")
-  implementation("com.google.android.material:material:$versionComGoogleAndroidMaterial")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$versionCoroutines")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${versionCoroutines}")
-  implementation("com.google.api-client:google-api-client-android:$versionComGoogleApiClient") {
-    exclude(group = "org.apache.httpcomponents")
+  implementation(kotlin(KOTLIN_STDLIB))
+  implementation(COROUTINES)
+  implementation(COROUTINES_ANDROID)
+  implementation(GOOGLE_PLAY_CLIENT) {
+    exclude(group = APACHE_HTTP_GROUP_ID)
   }
-  implementation("com.google.apis:google-api-services-youtube:$versionComGoogleApis") {
-    exclude(group = "org.apache.httpcomponents")
+  implementation(GOOGLE_YOUTUBE_API) {
+    exclude(group = APACHE_HTTP_GROUP_ID)
   }
-  implementation("io.coil-kt:coil-base:$versionCoil")
-
-  testImplementation("org.junit.jupiter:junit-jupiter-api:$versionJunit")
-  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$versionJunit")
-  androidTestImplementation("androidx.test.ext:junit:$versionAndroidxTestExt")
-  androidTestImplementation("androidx.test.espresso:espresso-core:$versionAndroidxTestEspresso")
+  implementation(COIL)
 }
