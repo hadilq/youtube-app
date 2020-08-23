@@ -76,18 +76,3 @@ const val MULTIDEX = "androidx.multidex:multidex:2.0.1"
 const val COIL = "io.coil-kt:coil-base:0.11.0"
 const val MOCKK = "io.mockk:mockk:1.10.0"
 const val MOCKK_COMMON = "io.mockk:mockk-common:1.10.0"
-
-fun Project.addAndroidBasics(configurationName: String = "implementation") {
-  dependencies.add(configurationName, ANDROIDX_CORE)
-  dependencies.add(configurationName, ANDROIDX_APPCOMPAT)
-  dependencies.add(configurationName, ANDROID_MATERIAL)
-}
-
-fun Project.addJUnit() {
-  dependencies.add("testImplementation", JUPITER_API)
-  dependencies.add("testRuntimeOnly", JUPITER_ENGINE)
-  tasks.withType<Test> {
-    useJUnitPlatform()
-  }
-}
-

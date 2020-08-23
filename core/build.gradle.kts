@@ -24,26 +24,7 @@ plugins {
   id("com.github.hadilq.build-plugin")
 }
 
-android {
-  compileSdkVersion(VERSION_COMPILE_SDK)
-  defaultConfig {
-    minSdkVersion(VERSION_MIN_SDK)
-    targetSdkVersion(VERSION_TARGET_SDK)
-    consumerProguardFiles("consumer-rules.pro")
-  }
-
-  compileOptions {
-    sourceCompatibility(JavaVersion.VERSION_1_8)
-    targetCompatibility(JavaVersion.VERSION_1_8)
-  }
-
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_1_8.toString()
-  }
-}
-
-addAndroidBasics()
-addJUnit()
+setupAndroidLibrary()
 
 dependencies {
 

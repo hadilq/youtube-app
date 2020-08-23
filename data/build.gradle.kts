@@ -25,29 +25,12 @@ plugins {
 }
 
 android {
-  compileSdkVersion(VERSION_COMPILE_SDK)
-  defaultConfig {
-    minSdkVersion(VERSION_MIN_SDK)
-    targetSdkVersion(VERSION_TARGET_SDK)
-    consumerProguardFiles("consumer-rules.pro")
-    multiDexEnabled = true
-  }
-
-  compileOptions {
-    sourceCompatibility(JavaVersion.VERSION_1_8)
-    targetCompatibility(JavaVersion.VERSION_1_8)
-  }
-
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_1_8.toString()
-  }
   lintOptions {
     disable("TrustAllX509TrustManager")
   }
 }
 
-addAndroidBasics()
-addJUnit()
+setupAndroidLibrary()
 
 dependencies {
   implementation(project(":domain"))
