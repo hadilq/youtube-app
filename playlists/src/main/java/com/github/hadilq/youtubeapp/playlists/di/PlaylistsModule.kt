@@ -20,7 +20,8 @@ import com.github.hadilq.youtubeapp.domain.di.DomainModule
 import com.github.hadilq.youtubeapp.domain.di.PlaylistsModuleSyntax
 import com.github.hadilq.youtubeapp.playlists.PlaylistViewHolderFactory
 import com.github.hadilq.youtubeapp.playlists.PlaylistsAdapter
-import com.github.hadilq.youtubeapp.playlists.PlaylistsViewModelFactory
+import com.github.hadilq.youtubeapp.presentation.di.PresentationModule
+import com.github.hadilq.youtubeapp.presentation.playlists.PlaylistsViewModelFactory
 
 interface PlaylistsModule : DomainModule, CoreModule {
 
@@ -32,3 +33,5 @@ interface PlaylistsModule : DomainModule, CoreModule {
 }
 
 fun PlaylistsModuleSyntax.fix() = this as PlaylistsModule
+
+fun PlaylistsModule.fixPresentation() = this as PresentationModule

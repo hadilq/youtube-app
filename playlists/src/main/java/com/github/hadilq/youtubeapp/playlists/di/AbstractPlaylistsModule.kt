@@ -17,7 +17,7 @@ package com.github.hadilq.youtubeapp.playlists.di
 
 import com.github.hadilq.youtubeapp.playlists.PlaylistViewHolderFactory
 import com.github.hadilq.youtubeapp.playlists.PlaylistsAdapter
-import com.github.hadilq.youtubeapp.playlists.PlaylistsViewModelFactory
+import com.github.hadilq.youtubeapp.presentation.playlists.PlaylistsViewModelFactory
 
 abstract class AbstractPlaylistsModule : PlaylistsModule {
 

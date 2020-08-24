@@ -17,8 +17,6 @@ package com.github.hadilq.build.plugin
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.tasks.testing.Test
-import org.gradle.kotlin.dsl.withType
 
 class BuildPlugin : Plugin<Project> {
 
@@ -31,6 +29,7 @@ private const val VERSION_ANDROIDX_APPCOMPAT = "1.2.0"
 private const val VERSION_ANDROID_MATERIAL = "1.2.0"
 private const val VERSION_GOOGLE_PLAY_SERVICES = "18.0.0"
 private const val VERSION_COROUTINES = "1.3.8"
+private const val VERSION_COROUTINES_LIFECYCLE = "0.4.1"
 private const val VERSION_GOOGLE_PLAY_CLIENT = "1.30.9"
 private const val VERSION_GOOGLE_API = "v3-rev99-1.17.0-rc"
 private const val VERSION_PAGING = "3.0.0-alpha02"
@@ -63,7 +62,10 @@ const val COROUTINES_ANDROID =
 const val COROUTINES_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$VERSION_COROUTINES"
 const val JUPITER_API = "org.junit.jupiter:junit-jupiter-api:$VERSION_JUNIT"
 const val JUPITER_ENGINE = "org.junit.jupiter:junit-jupiter-engine:$VERSION_JUNIT"
-const val COROUTINES_LIFECYCLE = "com.github.hadilq:coroutines-lifecycle-handler-android:0.4.1"
+const val COROUTINES_LIFECYCLE =
+  "com.github.hadilq:coroutines-lifecycle-handler-android:$VERSION_COROUTINES_LIFECYCLE"
+const val COROUTINES_LIFECYCLE_JVM =
+  "com.github.hadilq:coroutines-lifecycle-handler-jvm:$VERSION_COROUTINES_LIFECYCLE"
 const val CONSTRAIN_LAYOUT = "androidx.constraintlayout:constraintlayout:2.0.0-beta7"
 const val EASY_PERMISSION = "pub.devrel:easypermissions:0.3.0"
 const val PAGING_RUNTIME = "androidx.paging:paging-runtime:$VERSION_PAGING"

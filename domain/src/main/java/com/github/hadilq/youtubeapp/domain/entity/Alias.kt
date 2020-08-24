@@ -17,8 +17,6 @@ package com.github.hadilq.youtubeapp.domain.entity
 
 typealias Intent = Any
 
-typealias ConnectionResult = Int
-
 typealias AccountName = String
 
 typealias Query = String

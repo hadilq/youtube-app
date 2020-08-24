@@ -29,6 +29,7 @@ setupAndroidLibrary()
 dependencies {
   implementation(project(":domain"))
   implementation(project(":core"))
+  implementation(project(":presentation"))
 
   implementation(kotlin(KOTLIN_STDLIB))
   implementation(COROUTINES_LIFECYCLE)

@@ -15,7 +15,7 @@
  */
 package com.github.hadilq.youtubeapp.login.di
 
-import com.github.hadilq.youtubeapp.login.LoginViewModelFactory
+import com.github.hadilq.youtubeapp.presentation.login.LoginViewModelFactory
 
 abstract class AbstractLoginModule : LoginModule {
 

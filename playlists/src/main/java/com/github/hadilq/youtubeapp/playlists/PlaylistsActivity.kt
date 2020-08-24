@@ -25,6 +25,8 @@ import com.github.hadilq.youtubeapp.core.navigation.Login
 import com.github.hadilq.youtubeapp.domain.di.App
 import com.github.hadilq.youtubeapp.playlists.di.PlaylistsModule
 import com.github.hadilq.youtubeapp.playlists.di.fix
+import com.github.hadilq.youtubeapp.playlists.di.fixPresentation
+import com.github.hadilq.youtubeapp.presentation.playlists.PlaylistsViewModel
 import kotlinx.android.synthetic.main.playlists.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -62,11 +64,11 @@ class PlaylistsActivity : AppCompatActivity() {
   }
 
   private fun startWatchingForErrors() {
-    module.run { viewModel.run { startWatchingForErrors() } }
+    module.fixPresentation().run { viewModel.run { startWatchingForErrors() } }
   }
 
   private fun loadPlaylists() {
-    module.run { viewModel.run { startLoading() } }
+    module.fixPresentation().run { viewModel.run { startLoading() } }
   }
 
   private fun navigateToLogin(intent: Intent?) {

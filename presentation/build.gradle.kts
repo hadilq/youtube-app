@@ -13,14 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-rootProject.name = "youtube-app"
+import com.github.hadilq.build.plugin.*
 
-include(":app")
-include(":data")
-include(":domain")
-include(":presentation")
-include(":core")
-include(":login")
-include(":playlists")
+plugins {
+  kotlin("jvm")
+  id("com.github.hadilq.build-plugin")
+}
 
-includeBuild("build-plugin")
+addJUnit()
+
+dependencies {
+  implementation(project(":domain"))
+
+  implementation(kotlin(KOTLIN_STDLIB))
+  implementation(PAGING_COMMON)
+  implementation(COROUTINES_LIFECYCLE_JVM)
+
+  testImplementation(MOCKK)
+  testImplementation(COROUTINES_TEST)
+}

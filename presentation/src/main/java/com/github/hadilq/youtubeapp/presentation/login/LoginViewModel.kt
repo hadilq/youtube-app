@@ -13,24 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.login
+package com.github.hadilq.youtubeapp.presentation.login
 
 import com.github.hadilq.androidlifecyclehandler.LifeFactory
 import com.github.hadilq.androidlifecyclehandler.SLife
-import com.github.hadilq.coroutinelifecyclehandler.toLife
-import com.github.hadilq.youtubeapp.core.util.execute
-import com.github.hadilq.youtubeapp.domain.entity.AccountName
-import com.github.hadilq.youtubeapp.domain.entity.GooglePlayServicesAvailabilityError
-import com.github.hadilq.youtubeapp.domain.entity.Intent
-import com.github.hadilq.youtubeapp.domain.entity.Left
-import com.github.hadilq.youtubeapp.domain.entity.Right
-import com.github.hadilq.youtubeapp.domain.entity.UserRecoverableAuthIOError
-import com.github.hadilq.youtubeapp.login.di.LoginModule
-import com.google.android.gms.common.ConnectionResult
+import com.github.hadilq.coroutinelifecyclehandler.execute
+import com.github.hadilq.youtubeapp.domain.entity.*
+import com.github.hadilq.youtubeapp.presentation.di.PresentationModule
+import com.github.hadilq.youtubeapp.presentation.di.fixDomain
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -54,65 +49,71 @@ class LoginViewModel : SLife() {
   val launchIntent = launchIntentPublisher.receiveAsFlow()
   val loading = loadingPublisher.receiveAsFlow()
 
-  fun LoginModule.loginPlease() = execute(viewModelScope) {
-    loadingPublisher.send(true)
-    if (!isGooglePlayServicesAvailable()) {
-      loadingPublisher.send(false)
-      acquireGooglePlayServices()
-    } else if (getSelectedAccountName.run { execute() } == null) {
-      loadingPublisher.send(false)
-      chooseAccount()
-    } else if (!isDeviceOnline.run { execute() }) {
-      loadingPublisher.send(false)
-      noNetworkPublisher.send(Unit)
-    } else {
-      loadChannels.run { execute() }.onEach { either ->
-        when (either) {
-          is Left -> {
-            if (either.left.isEmpty()) {
-              loadingPublisher.send(false)
-              generalErrorPublisher.send(Unit)
-            } else {
-              loadingPublisher.send(false)
-              playlistPublisher.send(Unit)
-            }
-          }
-          is Right -> {
-            when (val right = either.right) {
-              is UserRecoverableAuthIOError -> launchIntentPublisher.send(right.intent)
-              is GooglePlayServicesAvailabilityError -> launchIntentPublisher.send(right.intent)
-              else -> {
+  fun PresentationModule.loginPlease() = execute(viewModelScope) {
+    with(fixDomain()) {
+      loadingPublisher.send(true)
+      if (!isGooglePlayServicesAvailable()) {
+        loadingPublisher.send(false)
+        acquireGooglePlayServices()
+      } else if (getSelectedAccountName.run { execute() } == null) {
+        loadingPublisher.send(false)
+        chooseAccount()
+      } else if (!isDeviceOnline.run { execute() }) {
+        loadingPublisher.send(false)
+        noNetworkPublisher.send(Unit)
+      } else {
+        loadChannels.run { execute() }.onEach { either ->
+          when (either) {
+            is Left -> {
+              if (either.left.isEmpty()) {
                 loadingPublisher.send(false)
                 generalErrorPublisher.send(Unit)
+              } else {
+                loadingPublisher.send(false)
+                playlistPublisher.send(Unit)
+              }
+            }
+            is Right -> {
+              when (val right = either.right) {
+                is UserRecoverableAuthIOError -> launchIntentPublisher.send(right.intent)
+                is GooglePlayServicesAvailabilityError -> launchIntentPublisher.send(right.intent)
+                else -> {
+                  loadingPublisher.send(false)
+                  generalErrorPublisher.send(Unit)
+                }
               }
             }
           }
-        }
-      }.toLife().sync()
+        }.launchIn(this@execute)
+      }
     }
   }.sync()
 
-  private suspend fun LoginModule.chooseAccount() {
+  private suspend fun PresentationModule.chooseAccount() = with(fixDomain()) {
     chooseAccountPublisher.send(
       newChooseAccountIntent.run { execute() } to getSelectedAccountName.run { execute() }
     )
   }
 
-  private suspend fun LoginModule.isGooglePlayServicesAvailable(): Boolean {
-    return isGooglePlayServicesAvailable.run { execute() } == ConnectionResult.SUCCESS
-  }
+  private suspend fun PresentationModule.isGooglePlayServicesAvailable(): Boolean =
+    with(fixDomain()) {
+      return isGooglePlayServicesAvailable.run { execute() } is ConnectionResult.Success
+    }
 
-  private suspend fun LoginModule.acquireGooglePlayServices() {
+  private suspend fun PresentationModule.acquireGooglePlayServices() = with(fixDomain()) {
     val connectionStatusCode = isGooglePlayServicesAvailable.run { execute() }
     if (isGoogleUserResolvableError.run { execute(connectionStatusCode) }) {
-      showGooglePlayServicesAvailabilityErrorDialogPublisher.send(connectionStatusCode)
+      showGooglePlayServicesAvailabilityErrorDialogPublisher.send(connectionStatusCode.code)
     }
   }
 
-  fun LoginModule.setSelectedAccountName(accountName: AccountName) = execute(viewModelScope) {
-    setSelectedAccountName.run { execute(accountName) }
-    loginPlease()
-  }.sync()
+  fun PresentationModule.setSelectedAccountName(accountName: AccountName) =
+    execute(viewModelScope) {
+      with(fixDomain()) {
+        setSelectedAccountName.run { execute(accountName) }
+        loginPlease()
+      }
+    }.sync()
 }
 
 class LoginViewModelFactory : LifeFactory<LoginViewModel> {

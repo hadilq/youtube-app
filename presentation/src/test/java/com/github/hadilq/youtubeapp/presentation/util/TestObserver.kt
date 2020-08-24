@@ -1,4 +1,4 @@
-package com.github.hadilq.youtubeapp.login.util
+package com.github.hadilq.youtubeapp.presentation.util
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

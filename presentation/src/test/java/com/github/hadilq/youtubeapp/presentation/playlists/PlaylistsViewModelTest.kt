@@ -1,14 +1,13 @@
-package com.github.hadilq.youtubeapp.playlists
+package com.github.hadilq.youtubeapp.presentation.playlists
 
-import com.github.hadilq.youtubeapp.domain.entity.GoogleAuthIOError
-import com.github.hadilq.youtubeapp.domain.entity.GooglePlayServicesAvailabilityError
-import com.github.hadilq.youtubeapp.domain.entity.Intent
-import com.github.hadilq.youtubeapp.domain.entity.UserRecoverableAuthIOError
-import com.github.hadilq.youtubeapp.playlists.di.FakePlaylistsModule
-import com.github.hadilq.youtubeapp.playlists.util.test
+import androidx.paging.PagingData
+import com.github.hadilq.youtubeapp.domain.entity.*
+import com.github.hadilq.youtubeapp.presentation.di.FakeModule
+import com.github.hadilq.youtubeapp.presentation.util.test
 import io.mockk.coEvery
 import io.mockk.coJustRun
 import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runBlockingTest
@@ -19,7 +18,7 @@ internal class PlaylistsViewModelTest {
 
   @Test
   fun `startWatchingForErrors must do nothing when no error emitted`() = runBlockingTest {
-    with(FakePlaylistsModule(this)) {
+    with(FakeModule(this)) {
       with(PlaylistsViewModel()) {
         onBorn()
         val navToLoginTest = navToLogin.test(this@runBlockingTest)
@@ -38,13 +37,13 @@ internal class PlaylistsViewModelTest {
   fun `startWatchingForErrors must launch login with intent when UserRecoverableAuthIOError happened`() =
     runBlockingTest {
       val intent = Intent()
-      with(FakePlaylistsModule(this)) {
+      with(FakeModule(this)) {
         with(PlaylistsViewModel()) {
           onBorn()
           val navToLoginTest = navToLogin.test(this@runBlockingTest)
           with(handleErrors) {
             coEvery { execute() } returns
-              flowOf(UserRecoverableAuthIOError(RuntimeException(), intent))
+                flowOf(UserRecoverableAuthIOError(RuntimeException(), intent))
           }
 
           startWatchingForErrors()
@@ -61,13 +60,13 @@ internal class PlaylistsViewModelTest {
   fun `startWatchingForErrors must launch login with intent when GooglePlayServicesAvailabilityError happened`() =
     runBlockingTest {
       val intent = Intent()
-      with(FakePlaylistsModule(this)) {
+      with(FakeModule(this)) {
         with(PlaylistsViewModel()) {
           onBorn()
           val navToLoginTest = navToLogin.test(this@runBlockingTest)
           with(handleErrors) {
             coEvery { execute() } returns
-              flowOf(GooglePlayServicesAvailabilityError(RuntimeException(), intent))
+                flowOf(GooglePlayServicesAvailabilityError(RuntimeException(), intent))
           }
 
           startWatchingForErrors()
@@ -83,13 +82,13 @@ internal class PlaylistsViewModelTest {
   @Test
   fun `startWatchingForErrors must launch login without intent when GoogleAuthIOError happened`() =
     runBlockingTest {
-      with(FakePlaylistsModule(this)) {
+      with(FakeModule(this)) {
         with(PlaylistsViewModel()) {
           onBorn()
           val navToLoginTest = navToLogin.test(this@runBlockingTest)
           with(handleErrors) {
             coEvery { execute() } returns
-              flowOf(GoogleAuthIOError(RuntimeException()))
+                flowOf(GoogleAuthIOError(RuntimeException()))
           }
           with(setSelectedAccountName) { coJustRun { execute(null) } }
 
@@ -104,6 +103,20 @@ internal class PlaylistsViewModelTest {
     }
 
   @Test
-  fun startLoading() {
+  fun startLoading() = runBlockingTest{
+    with(FakeModule(this)) {
+      with(PlaylistsViewModel()) {
+        onBorn()
+        val playlistsTest = playlists.test(this@runBlockingTest)
+        val pagingData : PagingData<Playlist> = mockk()
+        with(getPlaylists) { coEvery { execute(any()) } returns flowOf(pagingData) }
+
+        startLoading()
+
+        playlistsTest.assertValues(pagingData)
+        playlistsTest.finish()
+        onDie()
+      }
+    }
   }
 }

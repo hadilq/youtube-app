@@ -13,21 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.playlists
+package com.github.hadilq.youtubeapp.presentation.playlists
 
 import androidx.paging.PagingData
 import com.github.hadilq.androidlifecyclehandler.LifeFactory
 import com.github.hadilq.androidlifecyclehandler.SLife
-import com.github.hadilq.coroutinelifecyclehandler.toLife
-import com.github.hadilq.youtubeapp.core.util.execute
+import com.github.hadilq.coroutinelifecyclehandler.execute
 import com.github.hadilq.youtubeapp.domain.entity.GooglePlayServicesAvailabilityError
 import com.github.hadilq.youtubeapp.domain.entity.Intent
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
 import com.github.hadilq.youtubeapp.domain.entity.UserRecoverableAuthIOError
-import com.github.hadilq.youtubeapp.playlists.di.PlaylistsModule
+import com.github.hadilq.youtubeapp.presentation.di.PresentationModule
+import com.github.hadilq.youtubeapp.presentation.di.fixDomain
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 
@@ -40,24 +41,28 @@ class PlaylistsViewModel : SLife() {
   val playlists = playlistsPublisher.receiveAsFlow()
   val navToLogin = navToLoginPublisher.receiveAsFlow()
 
-  fun PlaylistsModule.startWatchingForErrors() = execute(viewModelScope) {
-    handleErrors.run { execute() }
-      .onEach {
-        when (it) {
-          is UserRecoverableAuthIOError -> navToLoginPublisher.send(it.intent)
-          is GooglePlayServicesAvailabilityError -> navToLoginPublisher.send(it.intent)
-          else -> {
-            setSelectedAccountName.run { execute(null) }
-            navToLoginPublisher.send(null)
+  fun PresentationModule.startWatchingForErrors() = execute(viewModelScope) {
+    with(fixDomain()) {
+      handleErrors.run { execute() }
+        .onEach {
+          when (it) {
+            is UserRecoverableAuthIOError -> navToLoginPublisher.send(it.intent)
+            is GooglePlayServicesAvailabilityError -> navToLoginPublisher.send(it.intent)
+            else -> {
+              setSelectedAccountName.run { execute(null) }
+              navToLoginPublisher.send(null)
+            }
           }
         }
-      }
-      .toLife().sync()
+        .launchIn(this@execute)
+    }
   }.sync()
 
-  fun PlaylistsModule.startLoading() = execute(viewModelScope) {
-    getPlaylists.run { execute(null) }.collect {
-      playlistsPublisher.send(it)
+  fun PresentationModule.startLoading() = execute(viewModelScope) {
+    with(fixDomain()) {
+      getPlaylists.run { execute(null) }.collect {
+        playlistsPublisher.send(it)
+      }
     }
   }.sync()
 }

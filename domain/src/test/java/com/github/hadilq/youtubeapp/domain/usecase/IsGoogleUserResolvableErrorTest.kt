@@ -26,7 +26,7 @@ internal class IsGoogleUserResolvableErrorTest {
 
   @Test
   fun execute() = with(FakeDomainModule()) {
-    val anyConnectionResult: ConnectionResult = 3
+    val anyConnectionResult = ConnectionResult.Fail(0)
     val anyResult = false
     runBlocking {
       with(googlePlayRepository) { coEvery { isUserResolvableError(anyConnectionResult) } returns anyResult }

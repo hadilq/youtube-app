@@ -32,6 +32,8 @@ import com.github.hadilq.youtubeapp.domain.di.App
 import com.github.hadilq.youtubeapp.domain.entity.AccountName
 import com.github.hadilq.youtubeapp.login.di.LoginModule
 import com.github.hadilq.youtubeapp.login.di.fix
+import com.github.hadilq.youtubeapp.login.di.fixPresentation
+import com.github.hadilq.youtubeapp.presentation.login.LoginViewModel
 import com.google.android.gms.common.GoogleApiAvailability
 import kotlinx.android.synthetic.main.login.*
 import kotlinx.coroutines.Dispatchers
@@ -169,7 +171,7 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
   @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
   private fun getResultsFromApi() {
-    module.run { viewModel.run { loginPlease() } }
+    module.fixPresentation().run { viewModel.run { loginPlease() } }
   }
 
   private fun launchIntent(intent: Intent) {
@@ -185,7 +187,7 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
   }
 
   private fun setSelectedAccountName(accountName: AccountName) {
-    module.run { viewModel.run { setSelectedAccountName(accountName) } }
+    module.fixPresentation().run { viewModel.run { setSelectedAccountName(accountName) } }
   }
 }
 

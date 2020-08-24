@@ -26,7 +26,7 @@ internal class IsGooglePlayServicesAvailableTest {
 
   @Test
   fun execute() = with(FakeDomainModule()) {
-    val anyConnectionResult:ConnectionResult = 3
+    val anyConnectionResult = ConnectionResult.Fail(3)
     runBlocking {
       with(googlePlayRepository) { coEvery { isGooglePlayServicesAvailable() } returns anyConnectionResult }
       val usecase = IsGooglePlayServicesAvailable()
