@@ -20,23 +20,11 @@ plugins {
   id("com.github.hadilq.build-plugin")
 }
 
-kotlin {
-  jvm {
-    compilations.all {
-      kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
-        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
-      }
-    }
-  }
-  metadata {
-    compilations.all {
-      kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
-      }
-    }
-  }
+setupMultiplatform()
+useJunit()
 
+
+kotlin {
   sourceSets {
     commonMain {
       dependencies {
@@ -69,12 +57,4 @@ kotlin {
       }
     }
   }
-
-  experimental {
-    coroutines = org.jetbrains.kotlin.gradle.dsl.Coroutines.ENABLE
-  }
-}
-
-tasks.withType<Test> {
-  useJUnitPlatform()
 }
