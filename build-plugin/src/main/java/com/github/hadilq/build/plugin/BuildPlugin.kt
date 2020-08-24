@@ -48,6 +48,7 @@ const val VERSION_NAME = "1.0.0"
 const val KOTLIN_STDLIB = "stdlib"
 const val KOTLIN_STDLIB_COMMON = "stdlib-common"
 const val KOTLIN_TEST_COMMON = "test-common"
+const val KOTLIN_TEST_JVM = "test-junit"
 const val KOTLIN_TEST_ANNOTATIONS_COMMON = "test-annotations-common"
 
 const val ANDROIDX_CORE = "androidx.core:core-ktx:$VERSION_ANDROIDX_CORE"
@@ -71,6 +72,8 @@ const val COROUTINES_LIFECYCLE =
   "com.github.hadilq:coroutines-lifecycle-handler-android:$VERSION_COROUTINES_LIFECYCLE"
 const val COROUTINES_LIFECYCLE_JVM =
   "com.github.hadilq:coroutines-lifecycle-handler-jvm:$VERSION_COROUTINES_LIFECYCLE"
+const val COROUTINES_LIFECYCLE_COMMON =
+  "com.github.hadilq:coroutines-lifecycle-handler-metadata:$VERSION_COROUTINES_LIFECYCLE"
 const val CONSTRAIN_LAYOUT = "androidx.constraintlayout:constraintlayout:2.0.0-beta7"
 const val EASY_PERMISSION = "pub.devrel:easypermissions:0.3.0"
 const val PAGING_RUNTIME = "androidx.paging:paging-runtime:$VERSION_PAGING"

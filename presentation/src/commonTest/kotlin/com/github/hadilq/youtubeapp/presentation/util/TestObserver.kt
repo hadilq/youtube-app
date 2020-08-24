@@ -5,7 +5,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import org.junit.jupiter.api.Assertions.assertEquals
+import kotlin.test.assertEquals
 
 fun <T> Flow<T>.test(scope: CoroutineScope): TestObserver<T> {
   return TestObserver(scope, this)
