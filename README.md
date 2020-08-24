@@ -45,6 +45,9 @@ picture.
  - More flexibility. For instance, you can inject functions.
  - The classes don't need to know who would provide them and how. Not even an annotation is needed.
  - Mocking and testing is supper easy.
+ - Less memory consumption in embedded devices.
+ - Easy extendable to Kotlin Multiplatform modules as you can see `domain` and `presentation` modules in 
+    this project are multiplatform modules.
 
 ### Cons respect to the standard solution which is Dagger 2
  - There is some boiler trap codes, especially in the app module.
