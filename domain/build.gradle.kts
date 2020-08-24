@@ -16,16 +16,65 @@
 import com.github.hadilq.build.plugin.*
 
 plugins {
-  kotlin("jvm")
+  kotlin("multiplatform")
   id("com.github.hadilq.build-plugin")
 }
 
-addJUnit()
+kotlin {
+  jvm {
+    compilations.all {
+      kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
+      }
+    }
+  }
+  metadata {
+    compilations.all {
+      kotlinOptions {
+        freeCompilerArgs = freeCompilerArgs + "-Xopt-in=kotlin.RequiresOptIn"
+      }
+    }
+  }
 
-dependencies {
-  implementation(kotlin(KOTLIN_STDLIB))
-  implementation(PAGING_COMMON)
+  sourceSets {
+    commonMain {
+      dependencies {
+        implementation(kotlin(KOTLIN_STDLIB_COMMON))
+        implementation(COROUTINES_COMMON)
+      }
+    }
 
-  testImplementation(MOCKK)
-  testImplementation(COROUTINES_TEST)
+    commonTest {
+      dependencies {
+        implementation(kotlin(KOTLIN_TEST_COMMON))
+        implementation(kotlin(KOTLIN_TEST_ANNOTATIONS_COMMON))
+        implementation(MOCKK_COMMON)
+      }
+    }
+
+    val jvmMain by getting {
+      dependencies {
+        implementation(kotlin(KOTLIN_STDLIB))
+        implementation(COROUTINES)
+      }
+    }
+
+    val jvmTest by getting {
+      dependencies {
+        implementation(MOCKK)
+        implementation(COROUTINES_TEST)
+        implementation(JUPITER_API)
+        runtimeOnly(JUPITER_ENGINE)
+      }
+    }
+  }
+
+  experimental {
+    coroutines = org.jetbrains.kotlin.gradle.dsl.Coroutines.ENABLE
+  }
+}
+
+tasks.withType<Test> {
+  useJUnitPlatform()
 }

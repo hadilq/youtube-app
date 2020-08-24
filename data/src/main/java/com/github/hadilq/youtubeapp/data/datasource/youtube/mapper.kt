@@ -28,7 +28,6 @@ import com.google.api.services.youtube.model.PlaylistListResponse
 import com.google.api.services.youtube.model.SearchListResponse
 import com.google.api.services.youtube.model.SearchResult
 import com.google.api.services.youtube.model.VideoListResponse
-import java.util.Date
 import com.google.api.services.youtube.model.Channel as ApiChannel
 import com.google.api.services.youtube.model.PageInfo as ApiPageInfo
 import com.google.api.services.youtube.model.Playlist as ApiPlaylist
@@ -49,7 +48,7 @@ private fun ApiPageInfo.map() = PageInfo(
 @OptIn(ExperimentalUnsignedTypes::class)
 private fun ApiPlaylist.map(): Playlist = Playlist(
   id = id,
-  publishedAt = Date(snippet.publishedAt.value),
+  publishedAt = snippet.publishedAt.value,
   title = snippet.title,
   thumbnail = snippet.thumbnails.medium.map(),
   channelTitle = snippet.channelTitle,
@@ -106,7 +105,7 @@ fun SearchListResponse.map(): PlaylistList = PlaylistList(
 @OptIn(ExperimentalUnsignedTypes::class)
 private fun SearchResult.map(): Playlist = Playlist(
   id = id.playlistId,
-  publishedAt = Date(snippet.publishedAt.value),
+  publishedAt = snippet.publishedAt.value,
   title = snippet.title,
   thumbnail = snippet.thumbnails.medium.map(),
   channelTitle = snippet.channelTitle,

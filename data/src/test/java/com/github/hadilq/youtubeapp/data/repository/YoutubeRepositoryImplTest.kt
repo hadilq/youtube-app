@@ -10,7 +10,6 @@ import io.mockk.coVerify
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.Test
-import java.util.Date
 
 @OptIn(ExperimentalUnsignedTypes::class)
 @Suppress("MainFunctionReturnUnit")
@@ -103,7 +102,7 @@ class YoutubeRepositoryImplTest {
   @Test
   fun startLoadingPlaylistItem() = with(FakeDomainModule()) {
     val anyAccountName: AccountName = "AnyAccountName"
-    val playlist = Playlist("", Date(), "", Thumbnail("", 0u, 0u), "", 0u)
+    val playlist = Playlist("", 0L, "", Thumbnail("", 0u, 0u), "", 0u)
     val repository = YoutubeRepositoryImpl()
     runBlocking {
       with(youtubeDataSource) { coEvery { getSelectedAccountName() } returns anyAccountName }

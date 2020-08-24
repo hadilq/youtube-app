@@ -17,8 +17,6 @@ package com.github.hadilq.build.plugin
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.tasks.testing.Test
-import org.gradle.kotlin.dsl.withType
 
 class BuildPlugin : Plugin<Project> {
 
@@ -31,11 +29,13 @@ private const val VERSION_ANDROIDX_APPCOMPAT = "1.2.0"
 private const val VERSION_ANDROID_MATERIAL = "1.2.0"
 private const val VERSION_GOOGLE_PLAY_SERVICES = "18.0.0"
 private const val VERSION_COROUTINES = "1.3.8"
+private const val VERSION_COROUTINES_LIFECYCLE = "0.4.1"
 private const val VERSION_GOOGLE_PLAY_CLIENT = "1.30.9"
 private const val VERSION_GOOGLE_API = "v3-rev99-1.17.0-rc"
 private const val VERSION_PAGING = "3.0.0-alpha02"
 private const val VERSION_ROOM = "2.3.0-alpha01"
 private const val VERSION_JUNIT = "5.6.2"
+private const val VERSION_MOCKK = "1.10.0"
 
 const val APPLICATION_ID = "com.github.hadilq.youtubeapp"
 const val VERSION_COMPILE_SDK = 30
@@ -46,6 +46,11 @@ const val VERSION_CODE = 1
 const val VERSION_NAME = "1.0.0"
 
 const val KOTLIN_STDLIB = "stdlib"
+const val KOTLIN_STDLIB_COMMON = "stdlib-common"
+const val KOTLIN_TEST_COMMON = "test-common"
+const val KOTLIN_TEST_JVM = "test-junit"
+const val KOTLIN_TEST_ANNOTATIONS_COMMON = "test-annotations-common"
+
 const val ANDROIDX_CORE = "androidx.core:core-ktx:$VERSION_ANDROIDX_CORE"
 const val ANDROIDX_APPCOMPAT = "androidx.appcompat:appcompat:$VERSION_ANDROIDX_APPCOMPAT"
 const val ANDROID_MATERIAL = "com.google.android.material:material:$VERSION_ANDROID_MATERIAL"
@@ -63,7 +68,12 @@ const val COROUTINES_ANDROID =
 const val COROUTINES_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$VERSION_COROUTINES"
 const val JUPITER_API = "org.junit.jupiter:junit-jupiter-api:$VERSION_JUNIT"
 const val JUPITER_ENGINE = "org.junit.jupiter:junit-jupiter-engine:$VERSION_JUNIT"
-const val COROUTINES_LIFECYCLE = "com.github.hadilq:coroutines-lifecycle-handler-android:0.4.1"
+const val COROUTINES_LIFECYCLE =
+  "com.github.hadilq:coroutines-lifecycle-handler-android:$VERSION_COROUTINES_LIFECYCLE"
+const val COROUTINES_LIFECYCLE_JVM =
+  "com.github.hadilq:coroutines-lifecycle-handler-jvm:$VERSION_COROUTINES_LIFECYCLE"
+const val COROUTINES_LIFECYCLE_COMMON =
+  "com.github.hadilq:coroutines-lifecycle-handler-metadata:$VERSION_COROUTINES_LIFECYCLE"
 const val CONSTRAIN_LAYOUT = "androidx.constraintlayout:constraintlayout:2.0.0-beta7"
 const val EASY_PERMISSION = "pub.devrel:easypermissions:0.3.0"
 const val PAGING_RUNTIME = "androidx.paging:paging-runtime:$VERSION_PAGING"
@@ -74,5 +84,5 @@ const val ROOM_KTX = "androidx.room:room-ktx:$VERSION_ROOM"
 const val ROOM_TESTING = "androidx.room:room-testing:$VERSION_ROOM"
 const val MULTIDEX = "androidx.multidex:multidex:2.0.1"
 const val COIL = "io.coil-kt:coil-base:0.11.0"
-const val MOCKK = "io.mockk:mockk:1.10.0"
-const val MOCKK_COMMON = "io.mockk:mockk-common:1.10.0"
+const val MOCKK = "io.mockk:mockk:$VERSION_MOCKK"
+const val MOCKK_COMMON = "io.mockk:mockk-common:$VERSION_MOCKK"

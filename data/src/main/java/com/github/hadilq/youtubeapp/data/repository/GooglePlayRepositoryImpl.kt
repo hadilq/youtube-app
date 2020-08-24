@@ -22,11 +22,13 @@ import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
 
 class GooglePlayRepositoryImpl : GooglePlayRepository {
 
-  override suspend fun DomainModule.isGooglePlayServicesAvailable(): ConnectionResult = with(fix()) {
-    googleDataSource.run { isGooglePlayServicesAvailable() }
-  }
+  override suspend fun DomainModule.isGooglePlayServicesAvailable(): ConnectionResult =
+    with(fix()) {
+      googleDataSource.run { isGooglePlayServicesAvailable() }
+    }
 
-  override suspend fun DomainModule.isUserResolvableError(connectionResult: ConnectionResult): Boolean = with(fix()) {
-    googleDataSource.run { isUserResolvableError(connectionResult) }
-  }
+  override suspend fun DomainModule.isUserResolvableError(connectionResult: ConnectionResult): Boolean =
+    with(fix()) {
+      googleDataSource.run { isUserResolvableError(connectionResult) }
+    }
 }

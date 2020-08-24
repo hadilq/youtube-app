@@ -12,7 +12,7 @@ internal class GooglePlayRepositoryImplTest {
 
   @Test
   fun isGooglePlayServicesAvailable() = with(FakeDomainModule()) {
-    val anyConnectionResult: ConnectionResult = com.google.android.gms.common.ConnectionResult.UNKNOWN
+    val anyConnectionResult: ConnectionResult = ConnectionResult.Fail(0)
     runBlocking {
       with(googleDataSource) { coEvery { isGooglePlayServicesAvailable() } returns anyConnectionResult }
       val repository = GooglePlayRepositoryImpl()
@@ -25,7 +25,7 @@ internal class GooglePlayRepositoryImplTest {
 
   @Test
   fun isUserResolvableError() = with(FakeDomainModule()) {
-    val anyConnectionResult: ConnectionResult = com.google.android.gms.common.ConnectionResult.UNKNOWN
+    val anyConnectionResult: ConnectionResult = ConnectionResult.Fail(0)
     val anyResult = true
     runBlocking {
       with(googleDataSource) { coEvery { isUserResolvableError(anyConnectionResult) } returns anyResult }

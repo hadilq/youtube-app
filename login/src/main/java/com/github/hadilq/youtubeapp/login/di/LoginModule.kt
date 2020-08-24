@@ -18,11 +18,14 @@ package com.github.hadilq.youtubeapp.login.di
 import com.github.hadilq.youtubeapp.core.di.CoreModule
 import com.github.hadilq.youtubeapp.domain.di.DomainModule
 import com.github.hadilq.youtubeapp.domain.di.LoginModuleSyntax
-import com.github.hadilq.youtubeapp.login.LoginViewModelFactory
+import com.github.hadilq.youtubeapp.presentation.di.PresentationModule
+import com.github.hadilq.youtubeapp.presentation.login.LoginViewModelFactory
 
-interface LoginModule : DomainModule, CoreModule {
+interface LoginModule : DomainModule, CoreModule, LoginModuleSyntax {
 
   val loginViewModelFactory: LoginViewModelFactory
 }
 
 fun LoginModuleSyntax.fix() = this as LoginModule
+
+fun LoginModule.fixPresentation() = this as PresentationModule

@@ -21,8 +21,13 @@ import com.github.hadilq.youtubeapp.domain.entity.ConnectionResult
 class GoogleDataSourceImpl : GoogleDataSource {
 
   override suspend fun DataModule.isGooglePlayServicesAvailable(): ConnectionResult =
-    googleApiAvailability.isGooglePlayServicesAvailable(applicationContext)
+    googleApiAvailability.isGooglePlayServicesAvailable(applicationContext).toResult()
 
   override suspend fun DataModule.isUserResolvableError(connectionResult: ConnectionResult): Boolean =
-    googleApiAvailability.isUserResolvableError(connectionResult)
+    googleApiAvailability.isUserResolvableError(connectionResult.code)
+
+  private fun Int.toResult(): ConnectionResult = when (this) {
+    com.google.android.gms.common.ConnectionResult.SUCCESS -> ConnectionResult.Success(this)
+    else -> ConnectionResult.Fail(this)
+  }
 }

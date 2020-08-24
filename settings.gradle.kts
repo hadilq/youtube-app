@@ -18,6 +18,7 @@ rootProject.name = "youtube-app"
 include(":app")
 include(":data")
 include(":domain")
+include(":presentation")
 include(":core")
 include(":login")
 include(":playlists")
