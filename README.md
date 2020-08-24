@@ -68,6 +68,13 @@ picture.
       val provideInstanceOf: SomeType = instance
     ```
 
+Run/Test
+---
+To run tests and checks just use standard `gradle` commands as IDEA/AS would not help you a lot!
+```kotlin
+./gradlew clean check
+```
+
 Questions/Problems
 ---
 Please feel free to fill an issue to ask questions or report issues. Also creating PRs are welcomed.
