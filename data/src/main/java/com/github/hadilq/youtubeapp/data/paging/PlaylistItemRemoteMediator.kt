@@ -24,17 +24,14 @@ import com.github.hadilq.youtubeapp.data.database.entity.PlaylistItem
 import com.github.hadilq.youtubeapp.data.database.entity.PlaylistItemPageToken
 import com.github.hadilq.youtubeapp.data.database.map
 import com.github.hadilq.youtubeapp.data.di.DataModule
-import com.github.hadilq.youtubeapp.domain.entity.GoogleAuthIOError
-import com.github.hadilq.youtubeapp.domain.entity.GooglePlayServicesAvailabilityError
-import com.github.hadilq.youtubeapp.domain.entity.PlaylistItems
-import com.github.hadilq.youtubeapp.domain.entity.UserRecoverableAuthIOError
+import com.github.hadilq.youtubeapp.domain.entity.*
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAuthIOException
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
 
 @OptIn(ExperimentalPagingApi::class)
 class PlaylistItemRemoteMediator(
-  private val playlist: com.github.hadilq.youtubeapp.domain.entity.Playlist,
+  private val playlist: Playlist,
   private val pageSize: Int,
   private val module: DataModule
 ) : RemoteMediator<Int, PlaylistItem>() {

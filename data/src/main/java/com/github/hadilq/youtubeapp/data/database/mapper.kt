@@ -18,6 +18,7 @@ package com.github.hadilq.youtubeapp.data.database
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
 import com.github.hadilq.youtubeapp.domain.entity.PlaylistItem
 import com.github.hadilq.youtubeapp.domain.entity.Thumbnail
+import java.util.*
 import com.github.hadilq.youtubeapp.data.database.entity.Playlist as PlaylistDB
 import com.github.hadilq.youtubeapp.data.database.entity.PlaylistItem as PlaylistItemDB
 import com.github.hadilq.youtubeapp.data.database.entity.Thumbnail as ThumbnailDB
@@ -27,7 +28,7 @@ fun Playlist.map(query: String?): PlaylistDB =
   PlaylistDB(
     id = id,
     query = query,
-    publishedAt = publishedAt,
+    publishedAt = Date(publishedAt),
     title = title,
     thumbnail = thumbnail.map(),
     channelTitle = channelTitle,
@@ -45,7 +46,7 @@ private fun Thumbnail.map(): ThumbnailDB =
 @OptIn(ExperimentalUnsignedTypes::class)
 fun PlaylistDB.map(): Playlist = Playlist(
   id = id,
-  publishedAt = publishedAt,
+  publishedAt = publishedAt.time,
   title = title,
   thumbnail = thumbnail.map(),
   channelTitle = channelTitle,
@@ -75,4 +76,3 @@ fun PlaylistItemDB.map(): PlaylistItem =
     author = author,
     duration = duration
   )
-

@@ -18,11 +18,13 @@ package com.github.hadilq.youtubeapp.playlists
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.github.hadilq.androidlifecyclehandler.provideLife
 import com.github.hadilq.coroutinelifecyclehandler.observe
 import com.github.hadilq.youtubeapp.core.navigation.Login
 import com.github.hadilq.youtubeapp.domain.di.App
+import com.github.hadilq.youtubeapp.domain.entity.Playlist
 import com.github.hadilq.youtubeapp.playlists.di.PlaylistsModule
 import com.github.hadilq.youtubeapp.playlists.di.fix
 import com.github.hadilq.youtubeapp.playlists.di.fixPresentation
@@ -45,7 +47,7 @@ class PlaylistsActivity : AppCompatActivity() {
     viewModel = provideLife(module.playlistsViewModelFactory)
 
     with(viewModel) {
-      playlists.observe()() { adapter.submitData(it) }
+      playlists.observe()() { adapter.submitData(it as PagingData<Playlist>) }
       navToLogin.observe()() {
         navigateToLogin(it?.let { intent -> intent as Intent })
       }

@@ -13,22 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.data.repository
+package com.github.hadilq.youtubeapp.domain.usecase
 
-import com.github.hadilq.youtubeapp.data.di.fix
 import com.github.hadilq.youtubeapp.domain.di.DomainModule
 import com.github.hadilq.youtubeapp.domain.entity.ConnectionResult
-import com.github.hadilq.youtubeapp.domain.repository.GooglePlayRepository
 
-class GooglePlayRepositoryImpl : GooglePlayRepository {
+class IsGooglePlayServicesAvailable {
 
-  override suspend fun DomainModule.isGooglePlayServicesAvailable(): ConnectionResult =
-    with(fix()) {
-      googleDataSource.run { isGooglePlayServicesAvailable() }
-    }
-
-  override suspend fun DomainModule.isUserResolvableError(connectionResult: ConnectionResult): Boolean =
-    with(fix()) {
-      googleDataSource.run { isUserResolvableError(connectionResult) }
-    }
+  suspend fun DomainModule.execute(): ConnectionResult =
+    googlePlayRepository.run { isGooglePlayServicesAvailable() }
 }

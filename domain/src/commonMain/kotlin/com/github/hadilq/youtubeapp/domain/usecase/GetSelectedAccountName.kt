@@ -13,19 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.hadilq.youtubeapp.login.di
+package com.github.hadilq.youtubeapp.domain.usecase
 
-import com.github.hadilq.youtubeapp.core.di.CoreModule
 import com.github.hadilq.youtubeapp.domain.di.DomainModule
-import com.github.hadilq.youtubeapp.domain.di.LoginModuleSyntax
-import com.github.hadilq.youtubeapp.presentation.di.PresentationModule
-import com.github.hadilq.youtubeapp.presentation.login.LoginViewModelFactory
+import com.github.hadilq.youtubeapp.domain.entity.AccountName
 
-interface LoginModule : DomainModule, CoreModule, LoginModuleSyntax {
+class GetSelectedAccountName {
 
-  val loginViewModelFactory: LoginViewModelFactory
+  suspend fun DomainModule.execute(): AccountName? =
+    youtubeRepository.run { getSelectedAccountName() }
 }
-
-fun LoginModuleSyntax.fix() = this as LoginModule
-
-fun LoginModule.fixPresentation() = this as PresentationModule

@@ -1,6 +1,5 @@
 package com.github.hadilq.youtubeapp.presentation.playlists
 
-import androidx.paging.PagingData
 import com.github.hadilq.youtubeapp.domain.entity.*
 import com.github.hadilq.youtubeapp.presentation.di.FakeModule
 import com.github.hadilq.youtubeapp.presentation.util.test

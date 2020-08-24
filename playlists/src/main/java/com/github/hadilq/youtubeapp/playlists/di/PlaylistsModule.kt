@@ -23,7 +23,7 @@ import com.github.hadilq.youtubeapp.playlists.PlaylistsAdapter
 import com.github.hadilq.youtubeapp.presentation.di.PresentationModule
 import com.github.hadilq.youtubeapp.presentation.playlists.PlaylistsViewModelFactory
 
-interface PlaylistsModule : DomainModule, CoreModule {
+interface PlaylistsModule : DomainModule, CoreModule, PlaylistsModuleSyntax {
 
   val playlistsViewModelFactory: PlaylistsViewModelFactory
 

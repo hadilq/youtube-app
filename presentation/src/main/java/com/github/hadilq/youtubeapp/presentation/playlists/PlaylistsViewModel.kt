@@ -15,13 +15,13 @@
  */
 package com.github.hadilq.youtubeapp.presentation.playlists
 
-import androidx.paging.PagingData
 import com.github.hadilq.androidlifecyclehandler.LifeFactory
 import com.github.hadilq.androidlifecyclehandler.SLife
 import com.github.hadilq.coroutinelifecyclehandler.execute
 import com.github.hadilq.youtubeapp.domain.entity.GooglePlayServicesAvailabilityError
 import com.github.hadilq.youtubeapp.domain.entity.Intent
 import com.github.hadilq.youtubeapp.domain.entity.Playlist
+import com.github.hadilq.youtubeapp.domain.entity.PagingData
 import com.github.hadilq.youtubeapp.domain.entity.UserRecoverableAuthIOError
 import com.github.hadilq.youtubeapp.presentation.di.PresentationModule
 import com.github.hadilq.youtubeapp.presentation.di.fixDomain

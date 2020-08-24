@@ -75,7 +75,9 @@ class YoutubeRepositoryImpl : YoutubeRepository {
     ) as Either<List<ChannelEntity>, Error>)
       .catch { e ->
         when (e) {
-          is GooglePlayServicesAvailabilityIOException -> emit(Right(GooglePlayServicesAvailabilityError(e, e.intent)))
+          is GooglePlayServicesAvailabilityIOException -> emit(Right(
+            GooglePlayServicesAvailabilityError(e, e.intent)
+          ))
           is UserRecoverableAuthIOException -> emit(Right(UserRecoverableAuthIOError(e, e.intent)))
           is GoogleAuthIOException -> emit(Right(GoogleAuthIOError(e)))
         }
