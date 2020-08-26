@@ -44,6 +44,10 @@ android {
   setupJavaTarget()
 }
 
+configurations.all {
+  exclude(group = COROUTINES_LIFECYCLE_PACKAGE_NAME, module = "$COROUTINES_LIFECYCLE_MODULE-jvm")
+}
+
 addAndroidBasics()
 addJUnit()
 

@@ -68,12 +68,14 @@ const val COROUTINES_ANDROID =
 const val COROUTINES_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$VERSION_COROUTINES"
 const val JUPITER_API = "org.junit.jupiter:junit-jupiter-api:$VERSION_JUNIT"
 const val JUPITER_ENGINE = "org.junit.jupiter:junit-jupiter-engine:$VERSION_JUNIT"
+const val COROUTINES_LIFECYCLE_PACKAGE_NAME = "com.github.hadilq"
+const val COROUTINES_LIFECYCLE_MODULE = "coroutines-lifecycle-handler"
 const val COROUTINES_LIFECYCLE =
-  "com.github.hadilq:coroutines-lifecycle-handler-android:$VERSION_COROUTINES_LIFECYCLE"
+  "$COROUTINES_LIFECYCLE_PACKAGE_NAME:$COROUTINES_LIFECYCLE_MODULE-android:$VERSION_COROUTINES_LIFECYCLE"
 const val COROUTINES_LIFECYCLE_JVM =
-  "com.github.hadilq:coroutines-lifecycle-handler-jvm:$VERSION_COROUTINES_LIFECYCLE"
+  "$COROUTINES_LIFECYCLE_PACKAGE_NAME:$COROUTINES_LIFECYCLE_MODULE-jvm:$VERSION_COROUTINES_LIFECYCLE"
 const val COROUTINES_LIFECYCLE_COMMON =
-  "com.github.hadilq:coroutines-lifecycle-handler-metadata:$VERSION_COROUTINES_LIFECYCLE"
+  "$COROUTINES_LIFECYCLE_PACKAGE_NAME:$COROUTINES_LIFECYCLE_MODULE-metadata:$VERSION_COROUTINES_LIFECYCLE"
 const val CONSTRAIN_LAYOUT = "androidx.constraintlayout:constraintlayout:2.0.0-beta7"
 const val EASY_PERMISSION = "pub.devrel:easypermissions:0.3.0"
 const val PAGING_RUNTIME = "androidx.paging:paging-runtime:$VERSION_PAGING"

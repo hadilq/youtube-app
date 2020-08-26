@@ -31,6 +31,7 @@ import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
 import com.github.hadilq.youtubeapp.domain.usecase.*
 import com.github.hadilq.youtubeapp.playlists.di.AbstractPlaylistsModule
 import com.github.hadilq.youtubeapp.playlists.di.PlaylistsModule
+import com.github.hadilq.youtubeapp.presentation.di.PresentationModule
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import kotlinx.coroutines.CoroutineScope
 
@@ -39,11 +40,13 @@ class AllNeedsOfPlaylistsModule(
   private val domainModule: AbstractDomainModule,
   private val coreModule: AbstractCoreModule,
   private val dataModule: AbstractDataModule,
+  private val presentationModule: PresentationModule,
   private val playlistsModule: AbstractPlaylistsModule
 ) : DomainModule by domainModule,
   CoreModule by coreModule,
   AppModule by appModule,
   DataModule by dataModule,
+  PresentationModule by presentationModule,
   PlaylistsModule by playlistsModule {
 
   override val applicationContext: Context

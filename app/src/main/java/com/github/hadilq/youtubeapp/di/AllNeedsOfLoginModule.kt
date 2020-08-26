@@ -31,6 +31,7 @@ import com.github.hadilq.youtubeapp.domain.repository.YoutubeRepository
 import com.github.hadilq.youtubeapp.domain.usecase.*
 import com.github.hadilq.youtubeapp.login.di.AbstractLoginModule
 import com.github.hadilq.youtubeapp.login.di.LoginModule
+import com.github.hadilq.youtubeapp.presentation.di.PresentationModule
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import kotlinx.coroutines.CoroutineScope
 
@@ -39,11 +40,13 @@ class AllNeedsOfLoginModule(
   private val domainModule: AbstractDomainModule,
   private val coreModule: AbstractCoreModule,
   private val dataModule: AbstractDataModule,
+  private val presentationModule: PresentationModule,
   private val loginModule: AbstractLoginModule
 ) : DomainModule by domainModule,
   CoreModule by coreModule,
   AppModule by appModule,
   DataModule by dataModule,
+  PresentationModule by presentationModule,
   LoginModule by loginModule {
 
   override val applicationContext: Context

@@ -67,6 +67,7 @@ class AppComponentImpl(
         domainModule = domainModule,
         coreModule = coreModule,
         dataModule = DataModuleImpl(appModule),
+        presentationModule = PresentationModuleImpl(),
         loginModule = LoginModuleImpl(domainModule, coreModule)
       )
     }
@@ -80,6 +81,7 @@ class AppComponentImpl(
         domainModule = domainModule,
         coreModule = coreModule,
         dataModule = DataModuleImpl(appModule),
+        presentationModule = PresentationModuleImpl(),
         playlistsModule = PlaylistsModuleImpl(domainModule, coreModule)
       )
     }
